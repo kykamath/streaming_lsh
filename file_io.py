@@ -15,4 +15,12 @@ class FileIO:
         FileIO.createDirectoryForFile(file)
         f = open('%s'%file, 'a')
         f.write(cjson.encode(data)+'\n')
-        f.close() 
+        f.close()
+    @staticmethod
+    def iterateJsonFromFile(file):
+        for line in open(file): 
+            try:
+                yield cjson.decode(line)
+            except: pass
+    @staticmethod
+    def getFileByDay(currentTime): return '_'.join([str(currentTime.year), str(currentTime.month), str(currentTime.day)])
