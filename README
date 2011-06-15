@@ -1,6 +1,7 @@
-A project for locality sensitive hashing over streaming data.
+A project for locality-sensitive hashing over streaming data.
 
 -------------------------------
         Dependancies          
 -------------------------------
-1) bitarray (http://pypi.python.org/pypi/bitarray): sudo easy_install bitarray
+1) bitarray (http://pypi.python.org/pypi/bitarray)
+2) Biopython (http://biopython.org/)
