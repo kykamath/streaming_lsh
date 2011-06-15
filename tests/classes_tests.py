@@ -4,7 +4,7 @@ Created on Jun 14, 2011
 @author: kykamath
 '''
 import unittest
-from signature import Signature, Permutation
+from classes import Signature, Permutation
 
 class SignatureTests(unittest.TestCase):
     
@@ -17,6 +17,10 @@ class SignatureTests(unittest.TestCase):
     def test_permutate(self):
         sgnt = Signature('1001011')
         self.assertTrue(sgnt.count()==sgnt.permutate(Permutation(7)).count())
+        
+#    def test_sorted(self):
+#        signatures = [Signature('10'), Signature('11'), Signature('00'), Signature('01')]
+#        Signature.sorted(signatures)
         
 class PermutationTests(unittest.TestCase):
     

@@ -14,11 +14,13 @@ numberOfPermutations = 5
 
 #documents = [Document(Vector({1:1,2:2})), Document(Vector({1:5,2:1})), Document(Vector({1:-2,2:1})),
 #             Document(Vector({1:10,2:2})), Document(Vector({1:-5,2:-10}))]
-documents = [Document(VectorGenerator.getRandomGaussianUnitVector(dimension, 0, 1)) for i in range(numberOfDocuments)]
+documents = dict((i, Document(i, VectorGenerator.getRandomGaussianUnitVector(dimension, 0, 1))) for i in xrange(numberOfDocuments))
 unitRandomVectors = [VectorGenerator.getRandomGaussianUnitVector(dimension, 0, 1) for i in range(lengthOfSignature)]
 permutations = [Permutation(lengthOfSignature) for i in range(numberOfPermutations)]
-for doc in documents: doc.initializeSignatureForVector(unitRandomVectors)
+for doc in documents: documents[doc].initializeSignatureForVector(unitRandomVectors)
 
 #    print doc, doc.initializeSignatureForVector(unitRandomVectors), doc.signature
 
-for p in permutations: print p
+for permutation in permutations: 
+    for docId in documents: permutation.documentSignatures[docId] = documents[doc].signature.permutate(permutation)
+    print permutation.documentSignatures
