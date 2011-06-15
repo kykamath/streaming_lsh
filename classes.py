@@ -23,11 +23,12 @@ class Permutation:
         self.signatureTrie = trie.trie()
     def apply(self, x): return (self.a*x+self.b)%self.p
     def addDocument(self, document):
-        signatureKey = document.signature.permutate(self).to01()
-        if self.signatureTrie.has_key(signatureKey): self.signatureTrie[signatureKey].add(document.docId)
-        else: self.signatureTrie[signatureKey] = set([document.docId])
+        permutedDocumentSignatureKey = document.signature.permutate(self).to01()
+        if self.signatureTrie.has_key(permutedDocumentSignatureKey): self.signatureTrie[permutedDocumentSignatureKey].add(document.docId)
+        else: self.signatureTrie[permutedDocumentSignatureKey] = set([document.docId])
     def getNearestDocuments(self, document):
-        nearestSignatureKey=SignatureTrie.getNearestSignatureKey(self.signatureTrie, document.signature)
+        permutedDocumentSignature = document.signature.permutate(self)
+        nearestSignatureKey=SignatureTrie.getNearestSignatureKey(self.signatureTrie, permutedDocumentSignature)
         return self.signatureTrie[nearestSignatureKey]
         
     def __str__(self): return 'p: %s, a: %s, b: %s'%(self.p, self.a, self.b)
@@ -37,7 +38,7 @@ class Signature(bitarray):
     
 class Document:
     def __init__(self, docId, vector): self.docId, self.vector = docId, vector
-    def initializeSignatureForVector(self, unitRandomVectors): self.signature = Signature(self.vector.dot(rv)>=0 for rv in unitRandomVectors)
+    def setDocumentSignatureUsingUnitRandomVectors(self, unitRandomVectors): self.signature = Signature(self.vector.dot(rv)>=0 for rv in unitRandomVectors)
     def __str__(self): return str(self.vector)
     
 if __name__ == '__main__':

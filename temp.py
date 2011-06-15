@@ -17,9 +17,9 @@ numberOfPermutations = 5
 documents = dict((i, Document(i, VectorGenerator.getRandomGaussianUnitVector(dimension, 0, 1))) for i in xrange(numberOfDocuments))
 unitRandomVectors = [VectorGenerator.getRandomGaussianUnitVector(dimension, 0, 1) for i in range(lengthOfSignature)]
 permutations = [Permutation(lengthOfSignature) for i in range(numberOfPermutations)]
-for doc in documents: documents[doc].initializeSignatureForVector(unitRandomVectors)
+for doc in documents: documents[doc].setDocumentSignatureUsingUnitRandomVectors(unitRandomVectors)
 
-#    print doc, doc.initializeSignatureForVector(unitRandomVectors), doc.signature
+#    print doc, doc.setDocumentSignatureUsingUnitRandomVectors(unitRandomVectors), doc.signature
 
 for permutation in permutations: 
     for docId in documents: permutation.documentSignatures[docId] = documents[doc].signature.permutate(permutation)
