@@ -30,7 +30,6 @@ class Permutation:
         permutedDocumentSignature = document.signature.permutate(self)
         nearestSignatureKey=SignatureTrie.getNearestSignatureKey(self.signatureTrie, permutedDocumentSignature)
         return self.signatureTrie[nearestSignatureKey]
-        
     def __str__(self): return 'p: %s, a: %s, b: %s'%(self.p, self.a, self.b)
     
 class Signature(bitarray):
@@ -41,30 +40,3 @@ class Document:
     def setDocumentSignatureUsingUnitRandomVectors(self, unitRandomVectors): self.signature = Signature(self.vector.dot(rv)>=0 for rv in unitRandomVectors)
     def __str__(self): return str(self.vector)
     
-if __name__ == '__main__':
-#    def match_all(string, trie):
-#        matches = []
-#        for i in range(len(string)):
-#            substr = string[:i+1]
-#            if not trie.has_prefix(substr):
-#                break
-#            if trie.has_key(substr):
-#                matches.append(substr)
-#        return matches
-#    
-#    
-#    from Bio import trie, triefind
-#    from bitarray import bitarray
-#    trieObject= trie.trie()
-#    trieObject['1101']=23
-#    trieObject['1100']=12
-#    trieObject[bitarray('101').to01()]=15
-
-    a = 'asd'
-    a=a[:-1]+'a'
-    print a
-
-    
-#    print match_all('1101', trieObject)
-    
-        
