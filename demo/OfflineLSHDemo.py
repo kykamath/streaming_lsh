@@ -41,7 +41,7 @@ class OfflineLSHDemo:
         # Build LSH Model.
         # Read training documents.
         traningDocumentsMap = {}
-        for docId, l in enumerate(iterateLinesFromFile('../data/training.dat')): traningDocumentsMap[docId] = createDocumentFromLine(docId, l)
+        for docId, l in enumerate(iterateLinesFromFile('../data/train.dat')): traningDocumentsMap[docId] = createDocumentFromLine(docId, l)
         # Construct cluster vectors.
         clusterToDocumentsMap = defaultdict(list)
         for document in traningDocumentsMap.values(): clusterToDocumentsMap[document.clusterType].append(document.vector)
