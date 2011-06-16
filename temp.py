@@ -26,27 +26,23 @@ Created on Jun 13, 2011
 #    print permutation.documentSignatures
 
 
-import random
-numberOfDocuments = 100
-dimensions = 52
-topics = {
-          'elections':{'prob': 0.3, 'tags': {'#gop': 0.4, '#bachmann': 0.2, '#perry': 0.2, '#romney': 0.2}},
-          'soccer': {'prob': 0.2, 'tags': {'#rooney': 0.15, '#chica': 0.1, '#manutd': 0.6, '#fergie': 0.15}},
-          'arab': {'prob': 0.3, 'tags': {'#libya': 0.4, '#arab': 0.3, '#eqypt': 0.15, '#syria': 0.15}},
-          'page3': {'prob': 0.2, 'tags': {'#paris': 0.2, '#kim': 0.4, '#britney': 0.2, '#khloe': 0.2}},
-          }
+from numpy import arange,sqrt, random, linalg
+from multiprocessing import Pool
 
-stopwords = 'abcdefghijklmnopqrstuvwxyz1234567890'
+counter = 0
+def cb(r):
+    global counter
+    print counter, r
+    counter +=1
+    
+def det(M):
+    return linalg.det(M)
 
-def pickOneByProbability(objects, probabilities):
-    initialValue, objectToRange = 0.0, {}
-    for i in range(len(objects)):
-        objectToRange[objects[i]]=(initialValue, initialValue+probabilities[i])
-        initialValue+=probabilities[i]
-    randomNumber = random.random()
-    for object, rangeVal in objectToRange.iteritems():
-        if rangeVal[0]<=randomNumber<=rangeVal[1]: return object
+po = Pool()
+for i in xrange(1,300):
+    j = random.normal(1,1,(100,100))
+    po.apply_async(det,(j,),callback=cb)
+po.close()
+po.join()
+print counter
 
-for i in range(numberOfDocuments):
-    topic = pickOneByProbability(topics.keys(), [topics[k]['prob'] for k in topics.keys()])
-    print ' '.join([topic] + [pickOneByProbability(topics[topic]['tags'].keys(), [topics[topic]['tags'][k] for k in topics[topic]['tags'].keys()]) for i in range(2)] + [random.choice(stopwords) for i in range(5)])

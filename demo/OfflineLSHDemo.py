@@ -4,9 +4,12 @@ Created on Jun 15, 2011
 @author: kykamath
 '''
 import sys
+from classes import Permutation, Document
+import multiprocessing
 sys.path.append('../')
-from library.vector import Vector
+from library.vector import Vector, VectorGenerator
 from collections import defaultdict
+from multiprocessing import Pool
 
 def iterateLinesFromFile(filePath):
     for line in open('../data/training.dat'):
@@ -23,8 +26,19 @@ def createVectorFromLine(line):
 class OfflineLSHDemo:
     @staticmethod
     def demo():
-        documents = [createVectorFromLine(l) for l in iterateLinesFromFile('../data/training.dat')]
-        print documents
+        dimensions = 52
+        signatureLength=13
+        numberOfPermutations = 5
+        
+        unitRandomVectors = [VectorGenerator.getRandomGaussianUnitVector(dimensions, 0, 1) for i in range(signatureLength)]
+        permutations = [Permutation(signatureLength) for i in range(numberOfPermutations)]
+        documents = [Document(docId, createVectorFromLine(l)) for docId, l in enumerate(iterateLinesFromFile('../data/training.dat'))]
+        
+        
+        map(lambda document: document.setDocumentSignatureUsingUnitRandomVectors(unitRandomVectors), documents)
+        
+        for permutation in permutations:
+            for document in documents: permutation.addDocument(document)
+        
 if __name__ == '__main__':
     OfflineLSHDemo.demo()
-            
