@@ -3,13 +3,11 @@ Created on Jun 15, 2011
 
 @author: kykamath
 '''
+
 import sys
-from classes import Permutation, Document
-import multiprocessing
 sys.path.append('../')
+from classes import Permutation, Document
 from library.vector import Vector, VectorGenerator
-from collections import defaultdict
-from multiprocessing import Pool
 
 def iterateLinesFromFile(filePath):
     for line in open('../data/training.dat'):
