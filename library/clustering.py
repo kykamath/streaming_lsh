@@ -8,7 +8,7 @@ import random, cjson
 
 class TrainingAndTestDocuments:
     @staticmethod
-    def generate(numberOfDocuments = 100, dimensions = 52):
+    def generate(numberOfDocuments = 10, dimensions = 52):
         def pickOneByProbability(objects, probabilities):
             initialValue, objectToRange = 0.0, {}
             for i in range(len(objects)):
