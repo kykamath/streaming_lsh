@@ -21,12 +21,9 @@ import numpy
 from classes import Permutation, Document
 from library.vector import Vector, VectorGenerator
 from library.clustering import EvaluationMetrics
+from library.file_io import FileIO
 from collections import defaultdict
 from operator import itemgetter
-
-def iterateLinesFromFile(filePath):
-    for line in open(filePath):
-        if not line.startswith('#'): yield line.strip()
 
 class OfflineLSHDemo:
     @staticmethod
@@ -52,7 +49,7 @@ class OfflineLSHDemo:
         # Build LSH Model.
         # Read training documents.
         traningDocumentsMap = {}
-        for docId, l in enumerate(iterateLinesFromFile('../data/train_offline.dat')): traningDocumentsMap[docId] = createDocumentFromLine(docId, l)
+        for docId, l in enumerate(FileIO.iterateLinesFromFile('../data/train_offline.dat')): traningDocumentsMap[docId] = createDocumentFromLine(docId, l)
         # Construct cluster vectors.
         clusterToDocumentsMap = defaultdict(list)
         for document in traningDocumentsMap.values(): clusterToDocumentsMap[document.clusterType].append(document.vector)
@@ -67,7 +64,7 @@ class OfflineLSHDemo:
         # Testing the model.
         # Read testing documents.
         testDocumentsMap = {}
-        for docId, l in enumerate(iterateLinesFromFile('../data/test_offline.dat')): testDocumentsMap[docId] = createDocumentFromLine(docId, l)
+        for docId, l in enumerate(FileIO.iterateLinesFromFile('../data/test_offline.dat')): testDocumentsMap[docId] = createDocumentFromLine(docId, l)
         # Create signatures for test documents
         map(lambda document: document.setDocumentSignatureUsingUnitRandomVectors(unitRandomVectors), testDocumentsMap.values())
         
@@ -80,5 +77,6 @@ class OfflineLSHDemo:
         return EvaluationMetrics.purity(predicted, labels)
             
 if __name__ == '__main__':
-    print numpy.mean([OfflineLSHDemo.demo() for i in range(10)])
+#    print numpy.mean([OfflineLSHDemo.demo() for i in range(10)])
+    print OfflineLSHDemo.demo()
 
