@@ -3,8 +3,11 @@ A project for locality-sensitive hashing over streaming data.
 
 ### Dependancies          
 * bitarray (http://pypi.python.org/pypi/bitarray)
+
 	`sudo easy_install bitarray`
+	
 * Biopython (http://biopython.org/)
+
 	`sudo easy_install biopython`
 
 ### References          
