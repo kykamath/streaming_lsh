@@ -42,6 +42,13 @@ class EvaluationMetrics:
         p=EvaluationMetrics.precision(predicted,labels)
         r=EvaluationMetrics.recall(predicted,labels)
         return 2*p*r/(p+r),p,r
+    
+    @staticmethod
+    def purity(predicted,labels):
+        correctAssignedItems = 0.0
+        for u,v in zip(predicted,labels):
+            if u==v: correctAssignedItems+=1
+        return correctAssignedItems/len(predicted) 
 
 class TrainingAndTestDocuments:
     @staticmethod
