@@ -4,9 +4,10 @@ Created on Jun 15, 2011
 @author: kykamath
 '''
 
-import random, cjson, math
+import cjson, math
 from numpy import *
 from scipy.stats import mode
+import random
 
 class EvaluationMetrics:
     '''
@@ -52,7 +53,7 @@ class EvaluationMetrics:
 
 class TrainingAndTestDocuments:
     @staticmethod
-    def generate(numberOfDocuments = 10, dimensions = 52):
+    def generate(numberOfDocuments = 100, dimensions = 52):
         def pickOneByProbability(objects, probabilities):
             initialValue, objectToRange = 0.0, {}
             for i in range(len(objects)):
