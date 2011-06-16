@@ -36,7 +36,8 @@ class Signature(bitarray):
     def permutate(self, permutation): return Signature([self[permutation.apply(x)] for x in xrange(len(self))])
     
 class Document:
-    def __init__(self, docId, vector): self.docId, self.vector = docId, vector
-    def setDocumentSignatureUsingUnitRandomVectors(self, unitRandomVectors): self.signature = Signature(self.vector.dot(rv)>=0 for rv in unitRandomVectors)
-    def __str__(self): return str(self.vector)
+    def __init__(self, docId, vector, clusterType = None): self.docId, self.vector, self.clusterType = docId, vector, clusterType
+    def setDocumentSignatureUsingUnitRandomVectors(self, unitRandomVectors): 
+        for rv in unitRandomVectors: self.signature = Signature(self.vector.dot(rv)>=0 for rv in unitRandomVectors)
+    def __str__(self): return str(self.__dict__)
     
