@@ -3,6 +3,8 @@ Created on Jun 14, 2011
 
 @author: kykamath
 '''
+import sys
+sys.path.append('../')
 import unittest
 import math
 from vector import Vector, VectorGenerator
@@ -20,7 +22,7 @@ class VectorTests(unittest.TestCase):
         self.assertEqual(vector, {1:1})
         self.assertEqual(vector.mod(), 1)
     
-    def test__dimension(self):
+    def test_dimension(self):
         vector = Vector()
         self.assertEqual(vector.dimension,0)
         vector[10]=10;vector[11]=11
@@ -56,7 +58,9 @@ class VectorTests(unittest.TestCase):
         self.assertEqual(math.ceil(self.v1.cosineSimilarity(self.v1)), 1)
         self.assertEqual(Vector({1:1,2:0}).cosineSimilarity(Vector({1:0,2:1})), 0)
     
-    def test_getMeanVector(self): self.assertEqual(Vector.getMeanVector([self.v1,self.v2]), Vector({1:5/2., 2:11/2.}))
+    def test_getMeanVector(self): 
+        self.assertEqual(Vector.getMeanVector([self.v1,self.v2]), Vector({1:5/2., 2:11/2.}))
+        self.assertEqual(Vector.getMeanVector([Vector({1:1}), Vector({2:5})]), Vector({1:1/2.,2:5/2.}))
         
 class VectorGeneratorDemo:
     @staticmethod

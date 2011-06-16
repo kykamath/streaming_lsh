@@ -4,7 +4,44 @@ Created on Jun 15, 2011
 @author: kykamath
 '''
 
-import random, cjson
+import random, cjson, math
+from numpy import *
+from scipy.stats import mode
+
+class EvaluationMetrics:
+    '''
+    The implementation for many of these metrics was obtained at
+    http://blog.sun.tc/2010/11/clustering-evaluation-for-numpy-and-scipy.html.
+    The original authors email id is lin.sun84@gmail.com.
+    '''
+    @staticmethod
+    def precision(predicted,labels):
+        K=unique(predicted)
+        p=0
+        for cls in K:
+            cls_members=nonzero(predicted==cls)[0]
+            if cls_members.shape[0]<=1:
+                continue
+            real_label=mode(labels[cls_members])[0][0]
+            correctCount=nonzero(labels[cls_members]==real_label)[0].shape[0]
+            p+=double(correctCount)/cls_members.shape[0]
+        return p/K.shape[0]
+ 
+    @staticmethod
+    def recall(predicted,labels):
+        K=unique(predicted)
+        ccount=0
+        for cls in K:
+            cls_members=nonzero(predicted==cls)[0]
+            real_label=mode(labels[cls_members])[0][0]
+            ccount+=nonzero(labels[cls_members]==real_label)[0].shape[0]
+        return double(ccount)/predicted.shape[0] 
+    
+    @staticmethod
+    def f1(predicted,labels):
+        p=EvaluationMetrics.precision(predicted,labels)
+        r=EvaluationMetrics.recall(predicted,labels)
+        return 2*p*r/(p+r),p,r
 
 class TrainingAndTestDocuments:
     @staticmethod
