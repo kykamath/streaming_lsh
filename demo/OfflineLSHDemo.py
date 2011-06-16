@@ -6,14 +6,16 @@ Created on Jun 15, 2011
 
 import sys
 sys.path.append('../')
+import numpy
 from classes import Permutation, Document
 from library.vector import Vector, VectorGenerator
+from library.clustering import EvaluationMetrics
+from collections import defaultdict
+from operator import itemgetter
 
 def iterateLinesFromFile(filePath):
     for line in open(filePath):
         if not line.startswith('#'): yield line.strip()
-
-    
 
 class OfflineLSHDemo:
     @staticmethod
@@ -29,7 +31,6 @@ class OfflineLSHDemo:
                 else: vector[wordDimension]+=1
             return Document(docId, vector, clusterType=words[0])
         
-        
         dimensions = 52
         signatureLength=13
         numberOfPermutations = 5
@@ -37,26 +38,36 @@ class OfflineLSHDemo:
         unitRandomVectors = [VectorGenerator.getRandomGaussianUnitVector(dimensions, 0, 1) for i in range(signatureLength)]
         permutations = [Permutation(signatureLength) for i in range(numberOfPermutations)]
         
-        # Build LSH Model
+        # Build LSH Model.
+        # Read training documents.
         traningDocumentsMap = {}
         for docId, l in enumerate(iterateLinesFromFile('../data/training.dat')): traningDocumentsMap[docId] = createDocumentFromLine(docId, l)
+        # Construct cluster vectors.
+        clusterToDocumentsMap = defaultdict(list)
+        for document in traningDocumentsMap.values(): clusterToDocumentsMap[document.clusterType].append(document.vector)
+        clusterMap = {}
+        for k, v in clusterToDocumentsMap.iteritems(): clusterMap[k]=Document(docId=k, vector=Vector.getMeanVector(v), clusterType=k)
         
-        map(lambda document: document.setDocumentSignatureUsingUnitRandomVectors(unitRandomVectors), traningDocumentsMap.values())
+        # Create signatures and permutations for all the clusters.
+        map(lambda document: document.setDocumentSignatureUsingUnitRandomVectors(unitRandomVectors), clusterMap.values())
         for permutation in permutations:
-            for document in traningDocumentsMap.values(): permutation.addDocument(document)
+            for document in clusterMap.values(): permutation.addDocument(document)
         
-        # Testing the model
+        # Testing the model.
+        # Read testing documents.
         testDocumentsMap = {}
         for docId, l in enumerate(iterateLinesFromFile('../data/test.dat')): testDocumentsMap[docId] = createDocumentFromLine(docId, l)
-#        testDocuments = [Document(docId, createVectorFromLine(l)) for docId, l in enumerate(iterateLinesFromFile('../data/test.dat'))]
+        # Create signatures for test documents
         map(lambda document: document.setDocumentSignatureUsingUnitRandomVectors(unitRandomVectors), testDocumentsMap.values())
         
+        predicted, labels = [], []
         for t in testDocumentsMap.values():
-            print map(
-                      lambda docId: traningDocumentsMap[docId].clusterType, 
-                      reduce(lambda x,y:x.union(y), (permutation.getNearestDocuments(t) for permutation in permutations), set())
-                      )
+            possibleNearestClusters = reduce(lambda x,y:x.union(y), (permutation.getNearestDocuments(t) for permutation in permutations), set())
+            predictedClass = max(((clusterType, clusterMap[clusterType].vector.cosineSimilarity(t.vector)) for clusterType in possibleNearestClusters), key=itemgetter(1))
+            predicted.append(predictedClass[0])
+            labels.append(t.clusterType)
+        return EvaluationMetrics.purity(predicted, labels)
             
 if __name__ == '__main__':
-    OfflineLSHDemo.demo()
+    print numpy.mean([OfflineLSHDemo.demo() for i in range(10)])
 
