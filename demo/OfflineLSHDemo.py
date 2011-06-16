@@ -5,7 +5,6 @@ Command to run the demo: python OfflineLSHDemo.py
 
 The training and test documents used in this demo are in the following format:
 <cluster_id> <document>
-
 Example:
 1 abc def efe tert ertre
 2 sdf ertr frf frfe
@@ -53,7 +52,7 @@ class OfflineLSHDemo:
         # Build LSH Model.
         # Read training documents.
         traningDocumentsMap = {}
-        for docId, l in enumerate(iterateLinesFromFile('../data/train.dat')): traningDocumentsMap[docId] = createDocumentFromLine(docId, l)
+        for docId, l in enumerate(iterateLinesFromFile('../data/train_offline.dat')): traningDocumentsMap[docId] = createDocumentFromLine(docId, l)
         # Construct cluster vectors.
         clusterToDocumentsMap = defaultdict(list)
         for document in traningDocumentsMap.values(): clusterToDocumentsMap[document.clusterType].append(document.vector)
@@ -68,7 +67,7 @@ class OfflineLSHDemo:
         # Testing the model.
         # Read testing documents.
         testDocumentsMap = {}
-        for docId, l in enumerate(iterateLinesFromFile('../data/test.dat')): testDocumentsMap[docId] = createDocumentFromLine(docId, l)
+        for docId, l in enumerate(iterateLinesFromFile('../data/test_offline.dat')): testDocumentsMap[docId] = createDocumentFromLine(docId, l)
         # Create signatures for test documents
         map(lambda document: document.setDocumentSignatureUsingUnitRandomVectors(unitRandomVectors), testDocumentsMap.values())
         
