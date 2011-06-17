@@ -6,7 +6,7 @@ Created on Jun 14, 2011
 import random
 from bitarray import bitarray
 from Bio import trie
-from library.vector import VectorGenerator
+from library.vector import VectorGenerator, Vector
 from library.math_modified import isPrime
 
 class SignatureTrie:
@@ -50,14 +50,15 @@ class Document:
         for rv in unitRandomVectors: self.signature = Signature(self.vector.dot(rv)>=0 for rv in unitRandomVectors)
     def __str__(self): return str(self.__dict__)
 
-class RandomGaussianUnitVector():
-    def __init__(self, dimensions, mu, sigma):
-        vector = VectorGenerator.getRandomGaussianUnitVector(dimensions, mu, sigma)
-        self.vector = vector.getNormalizedVector()
-#    def permutate(self, permutation): return 
+class RandomGaussianUnitVector(Vector):
+    def __init__(self, vector=None, dimensions=None, mu=None, sigma=None):
+        if vector==None:
+            vector = VectorGenerator.getRandomGaussianUnitVector(dimensions, mu, sigma)
+            super(RandomGaussianUnitVector, self).__init__(vector.getNormalizedVector())
+        else: super(RandomGaussianUnitVector, self).__init__(vector) 
+    def getPermutedVector(self, permutation): return RandomGaussianUnitVector(dict([(k, self.getPermutedDimensionValue(permutation, k)) for k in self]))
+    def getPermutedDimensionValue(self, permutation, dimension): return self[permutation.apply(dimension)]
 
 class RandomGaussianUnitVectorPermutation(Permutation):
     def __init__(self, dimensions): super(RandomGaussianUnitVectorPermutation, self).__init__(dimensions)
-    
-     
     

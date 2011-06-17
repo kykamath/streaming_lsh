@@ -78,8 +78,16 @@ class SignaturePermutationTests(unittest.TestCase):
         self.assertEqual(self.pm.getNearestDocuments(newDocWithANearbySignature), set([1]))
 
 class RandomGaussianUnitVectorTests(unittest.TestCase):
-    def setUp(self): self.vector = RandomGaussianUnitVector(dimensions=10, mu=0, sigma=1)
-    def test_initialization(self): self.assertEquals('%0.0f'%self.vector.vector.mod(),'1')
+    def setUp(self): 
+        self.vector = RandomGaussianUnitVector(dimensions=5, mu=0, sigma=1)
+        self.permutation = RandomGaussianUnitVectorPermutation(dimensions=5)
+    def test_initialization(self): self.assertEquals('%0.0f'%self.vector.mod(),'1')
+    def test_getPermutedDimensionValue(self): self.assertEqual(self.vector[self.permutation.apply(10)], self.vector.getPermutedDimensionValue(self.permutation, 10))
+    def test_getPermutedVector(self): 
+        permutedVector = self.vector.getPermutedVector(self.permutation)
+        self.assertEqual(RandomGaussianUnitVector, type(permutedVector))
+        self.assertNotEqual(self.vector, permutedVector)
+        self.assertEqual('1', '%0.0f'%permutedVector.mod())
         
 #class RandomGaussianUnitVectorPermutationTests(unittest.TestCase):
 #    def setUp(self): self.pm = RandomGaussianUnitVectorPermutation(dimensions=13)
