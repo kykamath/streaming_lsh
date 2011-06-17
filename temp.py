@@ -25,24 +25,30 @@ Created on Jun 13, 2011
 #    for docId in documents: permutation.documentSignatures[docId] = documents[doc].signature.permutate(permutation)
 #    print permutation.documentSignatures
 
+#
+#from numpy import arange,sqrt, random, linalg
+#from multiprocessing import Pool
+#
+#counter = 0
+#def cb(r):
+#    global counter
+#    print counter, r
+#    counter +=1
+#    
+#def det(M):
+#    return linalg.det(M)
+#
+#po = Pool()
+#for i in xrange(1,300):
+#    j = random.normal(1,1,(100,100))
+#    po.apply_async(det,(j,),callback=cb)
+#po.close()
+#po.join()
+#print counter
 
-from numpy import arange,sqrt, random, linalg
-from multiprocessing import Pool
+import numpy
+import math
+def prime(upto=100):
+    return filter(lambda num: (num % numpy.arange(2,1+int(math.sqrt(num)))).all(), range(2,upto+1))
 
-counter = 0
-def cb(r):
-    global counter
-    print counter, r
-    counter +=1
-    
-def det(M):
-    return linalg.det(M)
-
-po = Pool()
-for i in xrange(1,300):
-    j = random.normal(1,1,(100,100))
-    po.apply_async(det,(j,),callback=cb)
-po.close()
-po.join()
-print counter
-
+print prime()

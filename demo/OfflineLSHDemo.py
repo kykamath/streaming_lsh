@@ -18,7 +18,7 @@ Created on Jun 15, 2011
 import sys
 sys.path.append('../')
 import numpy
-from classes import Permutation, Document
+from classes import SignaturePermutation, Document
 from library.vector import Vector, VectorGenerator
 from library.clustering import EvaluationMetrics
 from library.file_io import FileIO
@@ -44,7 +44,7 @@ class OfflineLSHDemo:
         numberOfPermutations = 5
         
         unitRandomVectors = [VectorGenerator.getRandomGaussianUnitVector(dimensions, 0, 1) for i in range(signatureLength)]
-        permutations = [Permutation(signatureLength) for i in range(numberOfPermutations)]
+        signaturePermutations = [SignaturePermutation(signatureLength) for i in range(numberOfPermutations)]
         
         # Build LSH Model.
         # Read training documents.
@@ -56,9 +56,9 @@ class OfflineLSHDemo:
         clusterMap = {}
         for k, v in clusterToDocumentsMap.iteritems(): clusterMap[k]=Document(docId=k, vector=Vector.getMeanVector(v), clusterType=k)
         
-        # Create signatures and permutations for all the clusters.
+        # Create signatures and signaturePermutations for all the clusters.
         map(lambda document: document.setDocumentSignatureUsingUnitRandomVectors(unitRandomVectors), clusterMap.values())
-        for permutation in permutations:
+        for permutation in signaturePermutations:
             for document in clusterMap.values(): permutation.addDocument(document)
         
         # Testing the model.
@@ -70,7 +70,7 @@ class OfflineLSHDemo:
         
         predicted, labels = [], []
         for t in testDocumentsMap.values():
-            possibleNearestClusters = reduce(lambda x,y:x.union(y), (permutation.getNearestDocuments(t) for permutation in permutations), set())
+            possibleNearestClusters = reduce(lambda x,y:x.union(y), (permutation.getNearestDocuments(t) for permutation in signaturePermutations), set())
             predictedClass = max(((clusterType, clusterMap[clusterType].vector.cosineSimilarity(t.vector)) for clusterType in possibleNearestClusters), key=itemgetter(1))
             predicted.append(predictedClass[0])
             labels.append(t.clusterType)

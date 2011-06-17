@@ -3,11 +3,11 @@ Created on Jun 14, 2011
 
 @author: kykamath
 '''
-import sys
+import sys, math, unittest
 sys.path.append('../')
-import unittest
 from Bio import trie
-from classes import Signature, Permutation, SignatureTrie, Document
+from classes import Signature, SignaturePermutation, SignatureTrie, Document,\
+    RandomGaussianUnitVector, Permutation, RandomGaussianUnitVectorPermutation
 from library.vector import VectorGenerator
 
 class SignatureTests(unittest.TestCase):
@@ -18,7 +18,7 @@ class SignatureTests(unittest.TestCase):
         self.assertEqual(sgnt.count(), 0)
     def test_permutate(self):
         sgnt = Signature('1001011')
-        self.assertTrue(sgnt.count()==sgnt.permutate(Permutation(7)).count())
+        self.assertTrue(sgnt.count()==sgnt.permutate(SignaturePermutation(7)).count())
         
 class SignatureTrieTests(unittest.TestCase):
     def setUp(self):
@@ -29,31 +29,36 @@ class SignatureTrieTests(unittest.TestCase):
     
     def test_getNearestSignature_nearbyKey(self): self.assertEquals(SignatureTrie.getNearestSignatureKey(self.tr, Signature('1100')), '1000')    
         
+
 class PermutationTests(unittest.TestCase):
+    def setUp(self): self.pm = Permutation(maximumValue=13)
+        
+    def test_initialization(self):
+        self.assertTrue(self.pm.a<self.pm.p and self.pm.b<self.pm.p)
+        self.assertTrue(self.pm.a%2!=0)
+    
+    def test_permutationFunction(self):
+        l = [self.pm.apply(i) for i in range(self.pm.p)]
+        self.assertEqual(sorted(l), range(self.pm.p))
+
+
+class SignaturePermutationTests(unittest.TestCase):
     def setUp(self):
-        self.dimension, self.signatureLength = 500, 23
+        self.dimension, self.signatureLength = 50, 23
         self.unitRandomVectors = [VectorGenerator.getRandomGaussianUnitVector(dimension=self.dimension, mu=0, sigma=1) for i in range(self.signatureLength)]
         
         self.doc1=Document(1, VectorGenerator.getRandomGaussianUnitVector(dimension=self.dimension, mu=0, sigma=1))
         self.doc2=Document(2, VectorGenerator.getRandomGaussianUnitVector(dimension=self.dimension, mu=0, sigma=1))
         self.doc1.setDocumentSignatureUsingUnitRandomVectors(self.unitRandomVectors); self.doc2.setDocumentSignatureUsingUnitRandomVectors(self.unitRandomVectors)
         
-        self.pm = Permutation(signatureLength=self.signatureLength)
+        self.pm = SignaturePermutation(signatureLength=self.signatureLength)
         self.pm.addDocument(self.doc1)
         self.pm.addDocument(self.doc2)
-        
-    def test_initialization(self):
-        self.assertTrue(self.pm.a<self.pm.p and self.pm.b<self.pm.p)
-        self.assertTrue(self.pm.a%2!=0)
-        
-    def test_permutationFunction(self):
-        l = [self.pm.apply(i) for i in range(self.pm.p)]
-        self.assertEqual(sorted(l), range(self.pm.p))
         
     def test_addDocument_newKey(self):
         doc1=Document(1, VectorGenerator.getRandomGaussianUnitVector(dimension=self.dimension, mu=0, sigma=1))
         doc1.setDocumentSignatureUsingUnitRandomVectors(self.unitRandomVectors)
-        pm = Permutation(signatureLength=self.signatureLength)
+        pm = SignaturePermutation(signatureLength=self.signatureLength)
         pm.addDocument(doc1)
         self.assertEqual(pm.signatureTrie[doc1.signature.permutate(pm).to01()], set([1]))
         
@@ -64,7 +69,6 @@ class PermutationTests(unittest.TestCase):
         self.assertEqual(self.pm.signatureTrie[self.doc1.signature.permutate(self.pm).to01()], set([1, 3]))
         
     def test_getNearestDocument_usingAKeyAlreadyInTrie(self): self.assertEqual(self.pm.getNearestDocuments(self.doc1), set([1]))
-    
     def test_getNearestDocument_usingANearbyKeyInTrie(self):
         digitReplacement = {'0': '1', '1': '0'}
         newDocWithANearbySignature = Document(3, VectorGenerator.getRandomGaussianUnitVector(dimension=self.dimension, mu=0, sigma=1))
@@ -73,6 +77,21 @@ class PermutationTests(unittest.TestCase):
         self.assertNotEquals(self.doc1.signature.to01(), newDocWithANearbySignature.signature.to01())
         # Next assertion can sometimes fail because of randomization.
         self.assertEqual(self.pm.getNearestDocuments(newDocWithANearbySignature), set([1]))
+
+class RandomGaussianUnitVectorTests(unittest.TestCase):
+    def setUp(self): self.vector = RandomGaussianUnitVector(dimensions=10, mu=0, sigma=1)
+    def test_initialization(self): self.assertEqual(math.ceil(self.vector.vector.mod()),1)
         
+#class RandomGaussianUnitVectorPermutationTests(unittest.TestCase):
+#    def setUp(self): self.pm = RandomGaussianUnitVectorPermutation(dimensions=10)
+#        
+#    def test_initialization(self):
+#        self.assertTrue(self.pm.a<self.pm.p and self.pm.b<self.pm.p)
+#        self.assertTrue(self.pm.a%2!=0)
+#    
+#    def test_permutationFunction(self):
+#        l = [self.pm.apply(i) for i in range(self.pm.p)]
+#        self.assertEqual(sorted(l), range(self.pm.p))
+#    
 if __name__ == '__main__':
     unittest.main()
