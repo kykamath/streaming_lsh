@@ -48,7 +48,7 @@ Created on Jun 13, 2011
 
 import numpy
 import math
-def prime(upto=100000):
+def prime(upto=500000):
     return filter(lambda num: (num % numpy.arange(2,1+int(math.sqrt(num)))).all(), range(2,upto+1))
 
 print prime()
