@@ -7,6 +7,7 @@ import random
 from bitarray import bitarray
 from Bio import trie
 from library.vector import VectorGenerator
+from library.math_modified import isPrime
 
 class SignatureTrie:
     @staticmethod
@@ -23,7 +24,7 @@ class Signature(bitarray):
 
 class Permutation(object):
     def __init__(self, maximumValue): 
-        if maximumValue
+        if not isPrime(maximumValue): raise Exception('Maximum value should be prime')
         self.p, self.a, self.b = maximumValue, random.choice(range(maximumValue)[1::2]), random.choice(range(maximumValue))
     def apply(self, x): return (self.a*x+self.b)%self.p
     

@@ -32,11 +32,10 @@ class SignatureTrieTests(unittest.TestCase):
 
 class PermutationTests(unittest.TestCase):
     def setUp(self): self.pm = Permutation(maximumValue=13)
-        
+    def test_exceptionForMaxValueNotPrime(self): self.assertRaises(Exception, Permutation, 10)
     def test_initialization(self):
         self.assertTrue(self.pm.a<self.pm.p and self.pm.b<self.pm.p)
         self.assertTrue(self.pm.a%2!=0)
-    
     def test_permutationFunction(self):
         l = [self.pm.apply(i) for i in range(self.pm.p)]
         self.assertEqual(sorted(l), range(self.pm.p))
@@ -80,18 +79,10 @@ class SignaturePermutationTests(unittest.TestCase):
 
 class RandomGaussianUnitVectorTests(unittest.TestCase):
     def setUp(self): self.vector = RandomGaussianUnitVector(dimensions=10, mu=0, sigma=1)
-    def test_initialization(self): self.assertEqual(math.ceil(self.vector.vector.mod()),1)
+    def test_initialization(self): self.assertEqual(self.vector.vector.mod(),1)
         
 #class RandomGaussianUnitVectorPermutationTests(unittest.TestCase):
-#    def setUp(self): self.pm = RandomGaussianUnitVectorPermutation(dimensions=10)
-#        
-#    def test_initialization(self):
-#        self.assertTrue(self.pm.a<self.pm.p and self.pm.b<self.pm.p)
-#        self.assertTrue(self.pm.a%2!=0)
-#    
-#    def test_permutationFunction(self):
-#        l = [self.pm.apply(i) for i in range(self.pm.p)]
-#        self.assertEqual(sorted(l), range(self.pm.p))
-#    
+#    def setUp(self): self.pm = RandomGaussianUnitVectorPermutation(dimensions=13)
+    
 if __name__ == '__main__':
     unittest.main()
