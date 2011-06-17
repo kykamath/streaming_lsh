@@ -88,6 +88,10 @@ class RandomGaussianUnitVectorTests(unittest.TestCase):
         self.assertEqual(RandomGaussianUnitVector, type(permutedVector))
         self.assertNotEqual(self.vector, permutedVector)
         self.assertEqual('1', '%0.0f'%permutedVector.mod())
+    def test_isPermutationSameAsVector(self):
+        self.permutation.a=1
+        self.permutation.b=0
+        self.assertTrue(self.vector.isPermutationSameAsVector(self.permutation))
         
 #class RandomGaussianUnitVectorPermutationTests(unittest.TestCase):
 #    def setUp(self): self.pm = RandomGaussianUnitVectorPermutation(dimensions=13)

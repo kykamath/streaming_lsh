@@ -58,6 +58,8 @@ class RandomGaussianUnitVector(Vector):
         else: super(RandomGaussianUnitVector, self).__init__(vector) 
     def getPermutedVector(self, permutation): return RandomGaussianUnitVector(dict([(k, self.getPermutedDimensionValue(permutation, k)) for k in self]))
     def getPermutedDimensionValue(self, permutation, dimension): return self[permutation.apply(dimension)]
+    def isPermutationSameAsVector(self, permutation): return 0==permutation.apply(0)
+    
 
 class RandomGaussianUnitVectorPermutation(Permutation):
     def __init__(self, dimensions): super(RandomGaussianUnitVectorPermutation, self).__init__(dimensions)
