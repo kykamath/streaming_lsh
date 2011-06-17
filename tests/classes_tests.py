@@ -79,7 +79,7 @@ class SignaturePermutationTests(unittest.TestCase):
 
 class RandomGaussianUnitVectorTests(unittest.TestCase):
     def setUp(self): self.vector = RandomGaussianUnitVector(dimensions=10, mu=0, sigma=1)
-    def test_initialization(self): self.assertEqual(self.vector.vector.mod(),1)
+    def test_initialization(self): self.assertEquals('%0.0f'%self.vector.vector.mod(),'1')
         
 #class RandomGaussianUnitVectorPermutationTests(unittest.TestCase):
 #    def setUp(self): self.pm = RandomGaussianUnitVectorPermutation(dimensions=13)
