@@ -40,7 +40,7 @@ class OfflineLSHDemo:
                 else: vector[wordDimension]+=1
             return Document(docId, vector, clusterType=words[0])
         
-        dimensions = 57
+        dimensions = 53
         signatureLength=13
         numberOfPermutations = 5
         
@@ -58,15 +58,6 @@ class OfflineLSHDemo:
                     numberOfRandomGaussianUnitVectorPermutation+=1
         
         unitRandomVectors = [randomGaussianUnitVector.getPermutedVector(r) for r in randomGaussianUnitVectorPermutations]
-        i=0
-        for u in unitRandomVectors:
-            for v in unitRandomVectors:
-                if u==v: 
-                    print u
-                    print v
-                    i+=1
-        print i
-        exit()
         
         signaturePermutations = [SignaturePermutation(signatureLength) for i in range(numberOfPermutations)]
         
@@ -101,6 +92,6 @@ class OfflineLSHDemo:
         return EvaluationMetrics.purity(predicted, labels)
             
 if __name__ == '__main__':
-#    print numpy.mean([OfflineLSHDemo.demo() for i in range(10)])
-    print OfflineLSHDemo.demo()
+    print numpy.mean([OfflineLSHDemo.demo() for i in range(10)])
+#    print OfflineLSHDemo.demo()
 
