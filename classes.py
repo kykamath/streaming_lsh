@@ -62,4 +62,15 @@ class RandomGaussianUnitVector(Vector):
 
 class RandomGaussianUnitVectorPermutation(Permutation):
     def __init__(self, dimensions): super(RandomGaussianUnitVectorPermutation, self).__init__(dimensions)
+    @staticmethod
+    def getPermutations(signatureLength, dimensions, randomGaussianUnitVector):
+#        numberOfRandomGaussianUnitVectorPermutation, randomGaussianUnitVectorPermutations = 0, []
+        randomGaussianUnitVectorPermutations = []
+        while len(randomGaussianUnitVectorPermutations) < signatureLength:
+            randomGaussianUnitVectorPermutation = RandomGaussianUnitVectorPermutation(dimensions)
+            if not randomGaussianUnitVector.isPermutationSameAsVector(randomGaussianUnitVectorPermutation): 
+                if randomGaussianUnitVectorPermutation not in randomGaussianUnitVectorPermutations:
+                    randomGaussianUnitVectorPermutations.append(randomGaussianUnitVectorPermutation)
+#                    numberOfRandomGaussianUnitVectorPermutation+=1
+        return randomGaussianUnitVectorPermutations
     

@@ -47,19 +47,10 @@ class OfflineLSHDemo:
 #        unitRandomVectors = [VectorGenerator.getRandomGaussianUnitVector(dimensions, 0, 1) for i in range(signatureLength)]
         
         randomGaussianUnitVector = RandomGaussianUnitVector(dimensions=dimensions, mu=0, sigma=1)
-        
-        numberOfRandomGaussianUnitVectorPermutation = 0
-        randomGaussianUnitVectorPermutations = []
-        while numberOfRandomGaussianUnitVectorPermutation < signatureLength:
-            randomGaussianUnitVectorPermutation = RandomGaussianUnitVectorPermutation(dimensions)
-            if not randomGaussianUnitVector.isPermutationSameAsVector(randomGaussianUnitVectorPermutation): 
-                if randomGaussianUnitVectorPermutation not in randomGaussianUnitVectorPermutations:
-                    randomGaussianUnitVectorPermutations.append(randomGaussianUnitVectorPermutation)
-                    numberOfRandomGaussianUnitVectorPermutation+=1
+        randomGaussianUnitVectorPermutations = RandomGaussianUnitVectorPermutation.getPermutations(signatureLength, dimensions, randomGaussianUnitVector)
+        signaturePermutations = [SignaturePermutation(signatureLength) for i in range(numberOfPermutations)]
         
         unitRandomVectors = [randomGaussianUnitVector.getPermutedVector(r) for r in randomGaussianUnitVectorPermutations]
-        
-        signaturePermutations = [SignaturePermutation(signatureLength) for i in range(numberOfPermutations)]
         
         # Build LSH Model.
         # Read training documents.
