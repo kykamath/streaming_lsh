@@ -18,7 +18,8 @@ Created on Jun 15, 2011
 import sys
 sys.path.append('../')
 import numpy
-from classes import SignaturePermutation, Document
+from classes import SignaturePermutation, Document, RandomGaussianUnitVector,\
+    RandomGaussianUnitVectorPermutation
 from library.vector import Vector, VectorGenerator
 from library.clustering import EvaluationMetrics
 from library.file_io import FileIO
@@ -39,11 +40,34 @@ class OfflineLSHDemo:
                 else: vector[wordDimension]+=1
             return Document(docId, vector, clusterType=words[0])
         
-        dimensions = 52
+        dimensions = 5
         signatureLength=13
         numberOfPermutations = 5
         
-        unitRandomVectors = [VectorGenerator.getRandomGaussianUnitVector(dimensions, 0, 1) for i in range(signatureLength)]
+#        unitRandomVectors = [VectorGenerator.getRandomGaussianUnitVector(dimensions, 0, 1) for i in range(signatureLength)]
+        
+        randomGaussianUnitVector = RandomGaussianUnitVector(dimensions=dimensions, mu=0, sigma=1)
+        
+        numberOfRandomGaussianUnitVectorPermutation = 0
+        randomGaussianUnitVectorPermutations = []
+        while numberOfRandomGaussianUnitVectorPermutation < signatureLength:
+            randomGaussianUnitVectorPermutation = RandomGaussianUnitVectorPermutation(dimensions)
+            if not randomGaussianUnitVector.isPermutationSameAsVector(randomGaussianUnitVectorPermutation): 
+                if randomGaussianUnitVectorPermutation not in randomGaussianUnitVectorPermutations:
+                    randomGaussianUnitVectorPermutations.append(randomGaussianUnitVectorPermutation)
+                    numberOfRandomGaussianUnitVectorPermutation+=1
+        
+        unitRandomVectors = [randomGaussianUnitVector.getPermutedVector(r) for r in randomGaussianUnitVectorPermutations]
+        i=0
+        for u in unitRandomVectors:
+            for v in unitRandomVectors:
+                if u==v: 
+                    print u
+                    print v
+                    i+=1
+        print i
+        exit()
+        
         signaturePermutations = [SignaturePermutation(signatureLength) for i in range(numberOfPermutations)]
         
         # Build LSH Model.

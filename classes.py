@@ -27,13 +27,13 @@ class Permutation(object):
         if not isPrime(maximumValue): raise Exception('Maximum value should be prime')
         self.p, self.a, self.b = maximumValue, random.choice(range(maximumValue)[1::2]), random.choice(range(maximumValue))
     def apply(self, x): return (self.a*x+self.b)%self.p
+    def __eq__(self, other): return self.a==other.a and self.b==other.b and self.p==other.p
+    def __str__(self): return 'p: %s, a: %s, b: %s'%(self.p, self.a, self.b)
     
 class SignaturePermutation(Permutation):
     def __init__(self, signatureLength): 
-#        self.p, self.a, self.b = signatureLength, random.choice(range(signatureLength)[1::2]), random.choice(range(signatureLength))
         super(SignaturePermutation, self).__init__(signatureLength)
         self.signatureTrie = trie.trie()
-#    def apply(self, x): return (self.a*x+self.b)%self.p
     def addDocument(self, document):
         permutedDocumentSignatureKey = document.signature.permutate(self).to01()
         if self.signatureTrie.has_key(permutedDocumentSignatureKey): self.signatureTrie[permutedDocumentSignatureKey].add(document.docId)
@@ -42,7 +42,6 @@ class SignaturePermutation(Permutation):
         permutedDocumentSignature = document.signature.permutate(self)
         nearestSignatureKey=SignatureTrie.getNearestSignatureKey(self.signatureTrie, permutedDocumentSignature)
         return self.signatureTrie[nearestSignatureKey]
-    def __str__(self): return 'p: %s, a: %s, b: %s'%(self.p, self.a, self.b)
     
 class Document:
     def __init__(self, docId, vector, clusterType = None): self.docId, self.vector, self.clusterType = docId, vector, clusterType
@@ -58,7 +57,7 @@ class RandomGaussianUnitVector(Vector):
         else: super(RandomGaussianUnitVector, self).__init__(vector) 
     def getPermutedVector(self, permutation): return RandomGaussianUnitVector(dict([(k, self.getPermutedDimensionValue(permutation, k)) for k in self]))
     def getPermutedDimensionValue(self, permutation, dimension): return self[permutation.apply(dimension)]
-    def isPermutationSameAsVector(self, permutation): return 0==permutation.apply(0)
+    def isPermutationSameAsVector(self, permutation): return range(self.dimension)==[permutation.apply(i) for i in range(self.dimension)]
     
 
 class RandomGaussianUnitVectorPermutation(Permutation):

@@ -39,7 +39,11 @@ class PermutationTests(unittest.TestCase):
     def test_permutationFunction(self):
         l = [self.pm.apply(i) for i in range(self.pm.p)]
         self.assertEqual(sorted(l), range(self.pm.p))
-
+    def test_equality(self):
+        pm1 = Permutation(maximumValue=13)
+        pm1.a=self.pm.a;pm1.b=self.pm.b
+        self.assertEqual(pm1, self.pm)
+        self.assertTrue(pm1 in [self.pm])
 
 class SignaturePermutationTests(unittest.TestCase):
     def setUp(self):

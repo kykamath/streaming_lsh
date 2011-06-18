@@ -46,4 +46,4 @@ Created on Jun 13, 2011
 #po.join()
 #print counter
 
-print dict([('sape', 4139), ('guido', 4127), ('jack', 4098)])
+print {1:2, 2:3} in [{2:3, 1:2}]
