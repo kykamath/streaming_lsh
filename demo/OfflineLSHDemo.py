@@ -40,7 +40,7 @@ class OfflineLSHDemo:
                 else: vector[wordDimension]+=1
             return Document(docId, vector, clusterType=words[0])
         
-        dimensions = 5
+        dimensions = 52
         signatureLength=13
         numberOfPermutations = 5
         
