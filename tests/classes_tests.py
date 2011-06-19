@@ -123,6 +123,20 @@ class RandomGaussianUnitVectorTests(unittest.TestCase):
         self.permutation.a=1
         self.permutation.b=0
         self.assertTrue(self.vector.isPermutationSameAsVector(self.permutation))
-        
+
+class VectorPermutationTests(unittest.TestCase):
+    def setUp(self): self.pm = VectorPermutation(dimensions=13)
+    def test_exceptionForMaxValueNotPrime(self): self.assertRaises(Exception, Permutation, 10)
+    def test_initialization(self):
+        self.assertTrue(self.pm.a<self.pm.p and self.pm.b<self.pm.p)
+        self.assertTrue(self.pm.a%2!=0)
+        self.assertTrue(0==self.pm.b)
+    def test_applyFunction(self):
+#        print self.pm
+        l = [self.pm.applyFunction(i) for i in range(self.pm.p)]
+        self.assertEqual(sorted(l), range(self.pm.p))
+#        print range(self.pm.p)
+#        print l
+
 if __name__ == '__main__':
     unittest.main()

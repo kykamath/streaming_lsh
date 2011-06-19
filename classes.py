@@ -25,7 +25,7 @@ class Signature(bitarray):
 class Permutation(object):
     def __init__(self, maximumValue): 
         if not isPrime(maximumValue): raise Exception('Maximum value should be prime')
-        self.p, self.a, self.b = maximumValue, random.choice(range(maximumValue)[1::2]), random.choice(range(maximumValue))
+        self.p, self.a, self.b = maximumValue, random.choice(range(maximumValue)[3::2]), random.choice(range(maximumValue))
     def applyFunction(self, x): return (self.a*x+self.b)%self.p
     def applyInverseFunction(self, y): return (y-self.b-self.p)/self.a
     def __eq__(self, other): return self.a==other.a and self.b==other.b and self.p==other.p
@@ -73,7 +73,9 @@ class VectorPermutation(Permutation):
     '''
     Generates permutations of vector.
     '''
-    def __init__(self, dimensions): super(VectorPermutation, self).__init__(dimensions)
+    def __init__(self, dimensions): 
+        super(VectorPermutation, self).__init__(dimensions)
+        self.b=0
     @staticmethod
     def getPermutations(signatureLength, dimensions, randomGaussianUnitVector):
         vectorPermutations = []
