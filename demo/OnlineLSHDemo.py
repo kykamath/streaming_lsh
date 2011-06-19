@@ -6,7 +6,7 @@ Created on Jun 16, 2011
 
 from library.file_io import FileIO 
 from classes import Document, RandomGaussianUnitVector,\
-    RandomGaussianUnitVectorPermutation, SignaturePermutation
+    VectorPermutation, SignaturePermutation
 from library.vector import Vector
 
 class OnlineLSHDemo:
@@ -27,12 +27,17 @@ class OnlineLSHDemo:
         signatureLength=13
         numberOfPermutations = 5
         
-        randomGaussianUnitVector = RandomGaussianUnitVector(dimensions=dimensions, mu=0, sigma=1)
-        randomGaussianUnitVectorPermutations = RandomGaussianUnitVectorPermutation.getPermutations(signatureLength, dimensions, randomGaussianUnitVector)
+        unitVector = RandomGaussianUnitVector(dimensions=dimensions, mu=0, sigma=1)
+        vectorPermutations = VectorPermutation.getPermutations(signatureLength, dimensions, unitVector)
         signaturePermutations = [SignaturePermutation(signatureLength) for i in range(numberOfPermutations)]
         
-        
-#        for line in FileIO.iterateLinesFromFile('../data/streaming.dat'):
+        # Process the stream.
+        docId = 0
+        for line in FileIO.iterateLinesFromFile('../data/streaming.dat'):
+            document = createDocumentFromLine(docId, line)
+            print document
+            
+            docId+=1
 
 if __name__ == '__main__':
     OnlineLSHDemo().demo()

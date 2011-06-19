@@ -7,8 +7,9 @@ import sys, math, unittest
 sys.path.append('../')
 from Bio import trie
 from classes import Signature, SignaturePermutation, SignatureTrie, Document,\
-    RandomGaussianUnitVector, Permutation, RandomGaussianUnitVectorPermutation
+    RandomGaussianUnitVector, Permutation, VectorPermutation
 from library.vector import VectorGenerator
+import library.math_modified as math_mod
 
 class SignatureTests(unittest.TestCase):
     def test_initialization(self):
@@ -36,15 +37,41 @@ class PermutationTests(unittest.TestCase):
     def test_initialization(self):
         self.assertTrue(self.pm.a<self.pm.p and self.pm.b<self.pm.p)
         self.assertTrue(self.pm.a%2!=0)
-    def test_permutationFunction(self):
-        l = [self.pm.apply(i) for i in range(self.pm.p)]
+    def test_applyFunction(self):
+        l = [self.pm.applyFunction(i) for i in range(self.pm.p)]
         self.assertEqual(sorted(l), range(self.pm.p))
+    def test_applyInverseFunction(self):
+        l = [self.pm.applyFunction(i) for i in range(self.pm.p)]
+        print self.pm
+        print 'x', range(self.pm.p)
+        print 'y', l
+        print math_mod.gcd(self.pm.a,self.pm.p)
+#        N = [(self.pm.a*x+self.pm.b-y)/self.pm.p for x,y in zip(range(self.pm.p), l)]
+#        print N
+#        print [(y-self.pm.b-n*self.pm.p)/self.pm.a for y,n in zip(l,N)]
+#        self.assertEqual(range(self.pm.p), [self.pm.applyInverseFunction(i) for i in l])
     def test_equality(self):
         pm1 = Permutation(maximumValue=13)
         pm1.a=self.pm.a;pm1.b=self.pm.b
         self.assertEqual(pm1, self.pm)
         self.assertTrue(pm1 in [self.pm])
-
+        
+class DocumentTests(unittest.TestCase):
+    def test_setSignatureUsingVectorPermutations(self): 
+        dimensions, signatureLength = 53, 13
+        unitVector = RandomGaussianUnitVector(dimensions=dimensions, mu=0, sigma=1)
+        vectorPermutations = VectorPermutation.getPermutations(signatureLength, dimensions, unitVector)
+        permutatedUnitVectors = [unitVector.getPermutedVector(r) for r in vectorPermutations]
+        
+        documentVector = VectorGenerator.getRandomGaussianUnitVector(dimension=dimensions, mu=0, sigma=1)
+        documentWithSignatureByVectors=Document(1, documentVector)
+        documentWithSignatureByVectorPermutations=Document(2, documentVector)
+        
+        documentWithSignatureByVectors.setSignatureUsingVectors(permutatedUnitVectors)
+        print documentWithSignatureByVectors.signature
+        documentWithSignatureByVectorPermutations.setSignatureUsingVectorPermutations(unitVector, vectorPermutations)
+#        self.assertEqual(documentWithSignatureByVectors.signature, documentWithSignatureByVectorPermutations.signature)
+        
 class SignaturePermutationTests(unittest.TestCase):
     def setUp(self):
         self.dimension, self.signatureLength = 50, 23
@@ -52,7 +79,7 @@ class SignaturePermutationTests(unittest.TestCase):
         
         self.doc1=Document(1, VectorGenerator.getRandomGaussianUnitVector(dimension=self.dimension, mu=0, sigma=1))
         self.doc2=Document(2, VectorGenerator.getRandomGaussianUnitVector(dimension=self.dimension, mu=0, sigma=1))
-        self.doc1.setDocumentSignatureUsingUnitRandomVectors(self.unitRandomVectors); self.doc2.setDocumentSignatureUsingUnitRandomVectors(self.unitRandomVectors)
+        self.doc1.setSignatureUsingVectors(self.unitRandomVectors); self.doc2.setSignatureUsingVectors(self.unitRandomVectors)
         
         self.pm = SignaturePermutation(signatureLength=self.signatureLength)
         self.pm.addDocument(self.doc1)
@@ -60,7 +87,7 @@ class SignaturePermutationTests(unittest.TestCase):
         
     def test_addDocument_newKey(self):
         doc1=Document(1, VectorGenerator.getRandomGaussianUnitVector(dimension=self.dimension, mu=0, sigma=1))
-        doc1.setDocumentSignatureUsingUnitRandomVectors(self.unitRandomVectors)
+        doc1.setSignatureUsingVectors(self.unitRandomVectors)
         pm = SignaturePermutation(signatureLength=self.signatureLength)
         pm.addDocument(doc1)
         self.assertEqual(pm.signatureTrie[doc1.signature.permutate(pm).to01()], set([1]))
@@ -84,9 +111,9 @@ class SignaturePermutationTests(unittest.TestCase):
 class RandomGaussianUnitVectorTests(unittest.TestCase):
     def setUp(self): 
         self.vector = RandomGaussianUnitVector(dimensions=5, mu=0, sigma=1)
-        self.permutation = RandomGaussianUnitVectorPermutation(dimensions=5)
+        self.permutation = VectorPermutation(dimensions=5)
     def test_initialization(self): self.assertEquals('%0.0f'%self.vector.mod(),'1')
-    def test_getPermutedDimensionValue(self): self.assertEqual(self.vector[self.permutation.apply(10)], self.vector.getPermutedDimensionValue(self.permutation, 10))
+    def test_getPermutedDimensionValue(self): self.assertEqual(self.vector[self.permutation.applyFunction(10)], self.vector.getPermutedDimensionValue(self.permutation, 10))
     def test_getPermutedVector(self): 
         permutedVector = self.vector.getPermutedVector(self.permutation)
         self.assertEqual(RandomGaussianUnitVector, type(permutedVector))
@@ -97,8 +124,5 @@ class RandomGaussianUnitVectorTests(unittest.TestCase):
         self.permutation.b=0
         self.assertTrue(self.vector.isPermutationSameAsVector(self.permutation))
         
-#class RandomGaussianUnitVectorPermutationTests(unittest.TestCase):
-#    def setUp(self): self.pm = RandomGaussianUnitVectorPermutation(dimensions=13)
-    
 if __name__ == '__main__':
     unittest.main()

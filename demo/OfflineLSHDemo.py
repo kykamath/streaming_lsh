@@ -19,8 +19,8 @@ import sys
 sys.path.append('../')
 import numpy
 from classes import SignaturePermutation, Document, RandomGaussianUnitVector,\
-    RandomGaussianUnitVectorPermutation
-from library.vector import Vector, VectorGenerator
+    VectorPermutation
+from library.vector import Vector
 from library.clustering import EvaluationMetrics
 from library.file_io import FileIO
 from collections import defaultdict
@@ -44,13 +44,11 @@ class OfflineLSHDemo:
         signatureLength=13
         numberOfPermutations = 5
         
-#        unitRandomVectors = [VectorGenerator.getRandomGaussianUnitVector(dimensions, 0, 1) for i in range(signatureLength)]
-        
-        randomGaussianUnitVector = RandomGaussianUnitVector(dimensions=dimensions, mu=0, sigma=1)
-        randomGaussianUnitVectorPermutations = RandomGaussianUnitVectorPermutation.getPermutations(signatureLength, dimensions, randomGaussianUnitVector)
+        unitVector = RandomGaussianUnitVector(dimensions=dimensions, mu=0, sigma=1)
+        vectorPermutations = VectorPermutation.getPermutations(signatureLength, dimensions, unitVector)
         signaturePermutations = [SignaturePermutation(signatureLength) for i in range(numberOfPermutations)]
         
-        unitRandomVectors = [randomGaussianUnitVector.getPermutedVector(r) for r in randomGaussianUnitVectorPermutations]
+        permutatedUnitVectors = [unitVector.getPermutedVector(r) for r in vectorPermutations]
         
         # Build LSH Model.
         # Read training documents.
@@ -63,7 +61,7 @@ class OfflineLSHDemo:
         for k, v in clusterToDocumentsMap.iteritems(): clusterMap[k]=Document(docId=k, vector=Vector.getMeanVector(v), clusterType=k)
         
         # Create signatures and signaturePermutations for all the clusters.
-        map(lambda document: document.setDocumentSignatureUsingUnitRandomVectors(unitRandomVectors), clusterMap.values())
+        map(lambda document: document.setSignatureUsingVectors(permutatedUnitVectors), clusterMap.values())
         for permutation in signaturePermutations:
             for document in clusterMap.values(): permutation.addDocument(document)
         
@@ -72,7 +70,7 @@ class OfflineLSHDemo:
         testDocumentsMap = {}
         for docId, l in enumerate(FileIO.iterateLinesFromFile('../data/test_offline.dat')): testDocumentsMap[docId] = createDocumentFromLine(docId, l)
         # Create signatures for test documents
-        map(lambda document: document.setDocumentSignatureUsingUnitRandomVectors(unitRandomVectors), testDocumentsMap.values())
+        map(lambda document: document.setSignatureUsingVectors(permutatedUnitVectors), testDocumentsMap.values())
         
         predicted, labels = [], []
         for t in testDocumentsMap.values():

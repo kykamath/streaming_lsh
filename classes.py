@@ -20,13 +20,14 @@ class SignatureTrie:
         return iteratingKey
 
 class Signature(bitarray):
-    def permutate(self, permutation): return Signature([self[permutation.apply(x)] for x in xrange(len(self))])
+    def permutate(self, permutation): return Signature([self[permutation.applyFunction(x)] for x in xrange(len(self))])
 
 class Permutation(object):
     def __init__(self, maximumValue): 
         if not isPrime(maximumValue): raise Exception('Maximum value should be prime')
         self.p, self.a, self.b = maximumValue, random.choice(range(maximumValue)[1::2]), random.choice(range(maximumValue))
-    def apply(self, x): return (self.a*x+self.b)%self.p
+    def applyFunction(self, x): return (self.a*x+self.b)%self.p
+    def applyInverseFunction(self, y): return (y-self.b-self.p)/self.a
     def __eq__(self, other): return self.a==other.a and self.b==other.b and self.p==other.p
     def __str__(self): return 'p: %s, a: %s, b: %s'%(self.p, self.a, self.b)
     
@@ -45,8 +46,16 @@ class SignaturePermutation(Permutation):
     
 class Document:
     def __init__(self, docId, vector, clusterType = None): self.docId, self.vector, self.clusterType = docId, vector, clusterType
-    def setDocumentSignatureUsingUnitRandomVectors(self, unitRandomVectors): 
-        for rv in unitRandomVectors: self.signature = Signature(self.vector.dot(rv)>=0 for rv in unitRandomVectors)
+    def setSignatureUsingVectors(self, vectors): self.signature = Signature(self.vector.dot(v)>=0 for v in vectors)
+    def setSignatureUsingVectorPermutations(self, vector, vectorPermutations): pass
+        # For every vectorpermutation
+        # for every dimension in the document
+        #     add the value of dimension value* vector_dimencion_by_spplying_permutation
+        #     if the value > 0 signature 1
+        #     else 0
+#        for vp in vectorPermutations:
+#            total = 0
+#            for dimension in self.vector: total+=self.vector[dime]
     def __str__(self): return str(self.__dict__)
 
 class RandomGaussianUnitVector(Vector):
@@ -56,21 +65,21 @@ class RandomGaussianUnitVector(Vector):
             super(RandomGaussianUnitVector, self).__init__(vector.getNormalizedVector())
         else: super(RandomGaussianUnitVector, self).__init__(vector) 
     def getPermutedVector(self, permutation): return RandomGaussianUnitVector(dict([(k, self.getPermutedDimensionValue(permutation, k)) for k in self]))
-    def getPermutedDimensionValue(self, permutation, dimension): return self[permutation.apply(dimension)]
-    def isPermutationSameAsVector(self, permutation): return range(self.dimension)==[permutation.apply(i) for i in range(self.dimension)]
+    def getPermutedDimensionValue(self, permutation, dimension): return self[permutation.applyFunction(dimension)]
+    def isPermutationSameAsVector(self, permutation): return range(self.dimension)==[permutation.applyFunction(i) for i in range(self.dimension)]
     
 
-class RandomGaussianUnitVectorPermutation(Permutation):
-    def __init__(self, dimensions): super(RandomGaussianUnitVectorPermutation, self).__init__(dimensions)
+class VectorPermutation(Permutation):
+    '''
+    Generates permutations of vector.
+    '''
+    def __init__(self, dimensions): super(VectorPermutation, self).__init__(dimensions)
     @staticmethod
     def getPermutations(signatureLength, dimensions, randomGaussianUnitVector):
-#        numberOfRandomGaussianUnitVectorPermutation, randomGaussianUnitVectorPermutations = 0, []
-        randomGaussianUnitVectorPermutations = []
-        while len(randomGaussianUnitVectorPermutations) < signatureLength:
-            randomGaussianUnitVectorPermutation = RandomGaussianUnitVectorPermutation(dimensions)
-            if not randomGaussianUnitVector.isPermutationSameAsVector(randomGaussianUnitVectorPermutation): 
-                if randomGaussianUnitVectorPermutation not in randomGaussianUnitVectorPermutations:
-                    randomGaussianUnitVectorPermutations.append(randomGaussianUnitVectorPermutation)
-#                    numberOfRandomGaussianUnitVectorPermutation+=1
-        return randomGaussianUnitVectorPermutations
+        vectorPermutations = []
+        while len(vectorPermutations) < signatureLength:
+            vectorPermutation = VectorPermutation(dimensions)
+            if not randomGaussianUnitVector.isPermutationSameAsVector(vectorPermutation): 
+                if vectorPermutation not in vectorPermutations: vectorPermutations.append(vectorPermutation)
+        return vectorPermutations
     
