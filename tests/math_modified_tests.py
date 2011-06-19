@@ -5,7 +5,7 @@ Created on Jun 17, 2011
 '''
 
 import unittest
-from math_modified import isPrime
+from math_modified import isPrime, gcd
 
 class MathModifiedTests(unittest.TestCase):
     def test_isPrime(self):
@@ -15,6 +15,8 @@ class MathModifiedTests(unittest.TestCase):
         self.assertTrue(isPrime(13))
         self.assertFalse(isPrime(10))
         self.assertTrue(isPrime(101))
+    
+    def test_gcd(self): self.assertEqual(3, gcd(30,21))
         
 if __name__ == '__main__':
     unittest.main()
