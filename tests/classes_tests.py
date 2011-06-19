@@ -134,6 +134,7 @@ class VectorPermutationTests(unittest.TestCase):
     def test_applyFunction(self):
 #        print self.pm
         l = [self.pm.applyFunction(i) for i in range(self.pm.p)]
+        self.assertNotEqual(l, range(self.pm.p))
         self.assertEqual(sorted(l), range(self.pm.p))
 #        print range(self.pm.p)
 #        print l
