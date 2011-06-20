@@ -9,7 +9,7 @@ from Bio import trie
 from classes import Signature, SignaturePermutation, SignatureTrie, Document,\
     RandomGaussianUnitVector, Permutation, VectorPermutation
 from library.vector import VectorGenerator
-import library.math_modified as math_mod
+from library.math_modified import ModularArithmetic
 
 class SignatureTests(unittest.TestCase):
     def test_initialization(self):
@@ -40,16 +40,6 @@ class PermutationTests(unittest.TestCase):
     def test_applyFunction(self):
         l = [self.pm.applyFunction(i) for i in range(self.pm.p)]
         self.assertEqual(sorted(l), range(self.pm.p))
-    def test_applyInverseFunction(self):
-        l = [self.pm.applyFunction(i) for i in range(self.pm.p)]
-        print self.pm
-        print 'x', range(self.pm.p)
-        print 'y', l
-        print math_mod.gcd(self.pm.a,self.pm.p)
-#        N = [(self.pm.a*x+self.pm.b-y)/self.pm.p for x,y in zip(range(self.pm.p), l)]
-#        print N
-#        print [(y-self.pm.b-n*self.pm.p)/self.pm.a for y,n in zip(l,N)]
-#        self.assertEqual(range(self.pm.p), [self.pm.applyInverseFunction(i) for i in l])
     def test_equality(self):
         pm1 = Permutation(maximumValue=13)
         pm1.a=self.pm.a;pm1.b=self.pm.b
@@ -68,7 +58,7 @@ class DocumentTests(unittest.TestCase):
         documentWithSignatureByVectorPermutations=Document(2, documentVector)
         
         documentWithSignatureByVectors.setSignatureUsingVectors(permutatedUnitVectors)
-        print documentWithSignatureByVectors.signature
+#        print documentWithSignatureByVectors.signature
         documentWithSignatureByVectorPermutations.setSignatureUsingVectorPermutations(unitVector, vectorPermutations)
 #        self.assertEqual(documentWithSignatureByVectors.signature, documentWithSignatureByVectorPermutations.signature)
         
@@ -131,13 +121,15 @@ class VectorPermutationTests(unittest.TestCase):
         self.assertTrue(self.pm.a<self.pm.p and self.pm.b<self.pm.p)
         self.assertTrue(self.pm.a%2!=0)
         self.assertTrue(0==self.pm.b)
+        d,x,y = ModularArithmetic.gcdExtended(self.pm.p, self.pm.a) 
+        self.assertEqual(1, x*self.pm.p+y*self.pm.a)
     def test_applyFunction(self):
-#        print self.pm
         l = [self.pm.applyFunction(i) for i in range(self.pm.p)]
         self.assertNotEqual(l, range(self.pm.p))
         self.assertEqual(sorted(l), range(self.pm.p))
-#        print range(self.pm.p)
-#        print l
+    def test_applyInverseFunction(self):
+        l = [self.pm.applyFunction(i) for i in range(self.pm.p)]
+        self.assertEqual(range(self.pm.p), [self.pm.applyInverseFunction(i) for i in l])
 
 if __name__ == '__main__':
     unittest.main()

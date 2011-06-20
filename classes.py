@@ -7,7 +7,7 @@ import random
 from bitarray import bitarray
 from Bio import trie
 from library.vector import VectorGenerator, Vector
-from library.math_modified import isPrime
+from library.math_modified import isPrime, ModularArithmetic
 
 class SignatureTrie:
     @staticmethod
@@ -27,7 +27,6 @@ class Permutation(object):
         if not isPrime(maximumValue): raise Exception('Maximum value should be prime')
         self.p, self.a, self.b = maximumValue, random.choice(range(maximumValue)[3::2]), random.choice(range(maximumValue))
     def applyFunction(self, x): return (self.a*x+self.b)%self.p
-    def applyInverseFunction(self, y): return (y-self.b-self.p)/self.a
     def __eq__(self, other): return self.a==other.a and self.b==other.b and self.p==other.p
     def __str__(self): return 'p: %s, a: %s, b: %s'%(self.p, self.a, self.b)
     
@@ -76,6 +75,8 @@ class VectorPermutation(Permutation):
     def __init__(self, dimensions): 
         super(VectorPermutation, self).__init__(dimensions)
         self.b=0
+        self.a_inverse = ModularArithmetic.gcdExtended(self.p, self.a)[-1]
+    def applyInverseFunction(self, y): return y*self.a_inverse%self.p
     @staticmethod
     def getPermutations(signatureLength, dimensions, randomGaussianUnitVector):
         vectorPermutations = []
