@@ -46,15 +46,11 @@ class SignaturePermutation(Permutation):
 class Document:
     def __init__(self, docId, vector, clusterType = None): self.docId, self.vector, self.clusterType = docId, vector, clusterType
     def setSignatureUsingVectors(self, vectors): self.signature = Signature(self.vector.dot(v)>=0 for v in vectors)
-    def setSignatureUsingVectorPermutations(self, vector, vectorPermutations): pass
-        # For every vectorpermutation
-        # for every dimension in the document
-        #     add the value of dimension value* vector_dimencion_by_spplying_permutation
-        #     if the value > 0 signature 1
-        #     else 0
-#        for vp in vectorPermutations:
-#            total = 0
-#            for dimension in self.vector: total+=self.vector[dime]
+    def setSignatureUsingVectorPermutations(self, vector, vectorPermutations):
+        self.signature = Signature('')
+        for vp in vectorPermutations:
+            total = sum(self.vector[dimension]*vector[vp.applyFunction(dimension)] for dimension in self.vector)
+            self.signature.append(total>=0)
     def __str__(self): return str(self.__dict__)
 
 class RandomGaussianUnitVector(Vector):
@@ -72,11 +68,7 @@ class VectorPermutation(Permutation):
     '''
     Generates permutations of vector.
     '''
-    def __init__(self, dimensions): 
-        super(VectorPermutation, self).__init__(dimensions)
-        self.b=0
-        self.a_inverse = ModularArithmetic.gcdExtended(self.p, self.a)[-1]
-    def applyInverseFunction(self, y): return y*self.a_inverse%self.p
+    def __init__(self, dimensions): super(VectorPermutation, self).__init__(dimensions)
     @staticmethod
     def getPermutations(signatureLength, dimensions, randomGaussianUnitVector):
         vectorPermutations = []

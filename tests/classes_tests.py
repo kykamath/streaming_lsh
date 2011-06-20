@@ -25,11 +25,8 @@ class SignatureTrieTests(unittest.TestCase):
     def setUp(self):
         self.tr = trie.trie()
         self.tr['1000']=12;self.tr['1011']=12; self.tr['1010']=12
-        
     def test_getNearestSignature_exactKey(self): self.assertEquals(SignatureTrie.getNearestSignatureKey(self.tr, Signature('1000')), '1000')
-    
     def test_getNearestSignature_nearbyKey(self): self.assertEquals(SignatureTrie.getNearestSignatureKey(self.tr, Signature('1100')), '1000')    
-        
 
 class PermutationTests(unittest.TestCase):
     def setUp(self): self.pm = Permutation(maximumValue=13)
@@ -58,9 +55,8 @@ class DocumentTests(unittest.TestCase):
         documentWithSignatureByVectorPermutations=Document(2, documentVector)
         
         documentWithSignatureByVectors.setSignatureUsingVectors(permutatedUnitVectors)
-#        print documentWithSignatureByVectors.signature
         documentWithSignatureByVectorPermutations.setSignatureUsingVectorPermutations(unitVector, vectorPermutations)
-#        self.assertEqual(documentWithSignatureByVectors.signature, documentWithSignatureByVectorPermutations.signature)
+        self.assertEqual(documentWithSignatureByVectors.signature, documentWithSignatureByVectorPermutations.signature)
         
 class SignaturePermutationTests(unittest.TestCase):
     def setUp(self):
@@ -112,23 +108,6 @@ class RandomGaussianUnitVectorTests(unittest.TestCase):
         self.permutation.a=1
         self.permutation.b=0
         self.assertTrue(self.vector.isPermutationSameAsVector(self.permutation))
-
-class VectorPermutationTests(unittest.TestCase):
-    def setUp(self): self.pm = VectorPermutation(dimensions=13)
-    def test_exceptionForMaxValueNotPrime(self): self.assertRaises(Exception, Permutation, 10)
-    def test_initialization(self):
-        self.assertTrue(self.pm.a<self.pm.p and self.pm.b<self.pm.p)
-        self.assertTrue(self.pm.a%2!=0)
-        self.assertTrue(0==self.pm.b)
-        d,x,y = ModularArithmetic.gcdExtended(self.pm.p, self.pm.a) 
-        self.assertEqual(1, x*self.pm.p+y*self.pm.a)
-    def test_applyFunction(self):
-        l = [self.pm.applyFunction(i) for i in range(self.pm.p)]
-        self.assertNotEqual(l, range(self.pm.p))
-        self.assertEqual(sorted(l), range(self.pm.p))
-    def test_applyInverseFunction(self):
-        l = [self.pm.applyFunction(i) for i in range(self.pm.p)]
-        self.assertEqual(range(self.pm.p), [self.pm.applyInverseFunction(i) for i in l])
 
 if __name__ == '__main__':
     unittest.main()
