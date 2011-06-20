@@ -19,13 +19,28 @@ def isPrime(number):
     '''
     return number in filter(lambda num: (num % numpy.arange(2,1+int(math.sqrt(num)))).all(), range(2,number+1))
 
-def gcd(numA, numB):
-    '''
-    The method to determine greatest common divisor by Andrew Pociu
-    http://www.geekpedia.com/code120_Find-The-Greatest-Common-Divisor.html
-    '''
-    while numB != 0:
-        numRem = numA % numB
-        numA = numB
-        numB = numRem
-    return numA
+class ModularArithmetic:
+    @staticmethod
+    def gcd(numA, numB):
+        '''
+        The method to determine greatest common divisor by Andrew Pociu
+        http://www.geekpedia.com/code120_Find-The-Greatest-Common-Divisor.html
+        '''
+        while numB != 0:
+            numRem = numA % numB
+            numA, numB = numB, numRem
+        return numA
+    @staticmethod
+    def gcdExtended(a, b):
+        '''
+        Calculates gcd along with the co-efficients for
+        linear combinations of numA and numB.
+        Returns (gcd, x, y) such that gcd = numA*x + numB*y
+        
+        Thomas H. Cormen, Clifford Stein, Ronald L. Rivest, and Charles E. Leiserson. 2001. Introduction to Algorithms (2nd ed.). McGraw-Hill Higher Education.
+        Implements the EXTENDED-EUCLID algorithm on pg. 860.
+        '''
+        if b == 0: return (a,1,0)
+        (d_, x_, y_) = ModularArithmetic.gcdExtended(b, a%b)
+        (d,x,y)=(d_, y_, x_-(a//b)*y_)
+        return (d,x,y)
