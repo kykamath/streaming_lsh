@@ -95,7 +95,7 @@ class SignaturePermutationTests(unittest.TestCase):
         exactSignature = self.doc1.signature.to01() 
         newDocWithANearbySignature.signature = Signature(exactSignature[:-1]+digitReplacement[exactSignature[-1]])
         self.assertNotEquals(self.doc1.signature.to01(), newDocWithANearbySignature.signature.to01())
-        self.assertEqual(self.pm.getNearestDocuments(newDocWithANearbySignature), set([1])) # This assertion can sometimes fail because of randomization.
+        self.assertEqual(self.pm.getNearestDocuments(newDocWithANearbySignature), set([1])) # This assertion can sometimes fail because of randomization. Run the tests again. It's OK!
 
 class RandomGaussianUnitVectorTests(unittest.TestCase):
     def setUp(self): 
