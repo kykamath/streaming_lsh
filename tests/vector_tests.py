@@ -61,6 +61,7 @@ class VectorTests(unittest.TestCase):
     def test_getMeanVector(self): 
         self.assertEqual(Vector.getMeanVector([self.v1,self.v2]), Vector({1:5/2., 2:11/2.}))
         self.assertEqual(Vector.getMeanVector([Vector({1:1}), Vector({2:5})]), Vector({1:1/2.,2:5/2.}))
+        self.assertEqual(Vector.getMeanVector([Vector(), Vector({2:5})]), Vector({2:5/2.}))
         
 class VectorGeneratorDemo:
     @staticmethod
