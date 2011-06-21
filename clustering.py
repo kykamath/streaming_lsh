@@ -8,6 +8,8 @@ import cjson, math
 from numpy import *
 from scipy.stats import mode
 import random
+from collections import defaultdict
+from operator import itemgetter
 
 class EvaluationMetrics:
     '''
@@ -50,6 +52,25 @@ class EvaluationMetrics:
         for u,v in zip(predicted,labels):
             if u==v: correctAssignedItems+=1
         return correctAssignedItems/len(predicted) 
+
+    @staticmethod
+    def _getPredictedAndLabels(clusters):
+        labels=[]
+        predicted=clusters
+        for cluster in clusters:
+            classBySize = defaultdict(int)
+            for item in cluster: classBySize[item]+=1
+            clusterType = sorted(classBySize.iteritems(),key=itemgetter(1), reverse=True)[0][0]
+            labels.append([clusterType]*len(cluster))
+        p,l=[],[]
+        for pre in predicted: p+=pre
+        for lab in labels: l+=lab
+        return (array(p), array(l))
+
+    @staticmethod
+    def getValueForClusters(predicted, evaluationMethod):
+        predicted, labels = EvaluationMetrics._getPredictedAndLabels(predicted)
+        return evaluationMethod(predicted, labels)
 
 class TrainingAndTestDocuments:
     @staticmethod

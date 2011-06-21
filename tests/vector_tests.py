@@ -33,6 +33,9 @@ class VectorTests(unittest.TestCase):
         v1[1]=5;v1[2]=10; v2[1]=5;v2[2]=10
         self.assertEqual(v1+v2,{1: 10, 2: 20})
         self.assertEqual(v1-v2,{1: 0, 2: 0})
+        v3=Vector()
+        v3+=v1; v3+=v2
+        self.assertEqual(v3, {1: 10, 2: 20})
     
     def test_dot(self):
         v1 = Vector()
