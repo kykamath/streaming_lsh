@@ -35,8 +35,10 @@ class OnlineLSHDemo:
         docId = 0
         for line in FileIO.iterateLinesFromFile('../data/streaming.dat'):
             document = createDocumentFromLine(docId, line)
-            print document
-            
+            document.setSignatureUsingVectorPermutations(unitVector, vectorPermutations)
+#            for permutation in signaturePermutations:
+#                possibleNearestClusters = reduce(lambda x,y:x.union(y), (permutation.getNearestDocuments(document) for permutation in signaturePermutations), set())
+#                if not possibleNearestClusters: 
             docId+=1
 
 if __name__ == '__main__':

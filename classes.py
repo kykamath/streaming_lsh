@@ -54,7 +54,7 @@ class Document(Vector):
         for vp in vectorPermutations:
             total = sum(self[dimension]*vector[vp.applyFunction(dimension)] for dimension in self)
             self.signature.append(total>=0)
-    def __str__(self): return str(self.__dict__)
+    def __str__(self): return str(self.__dict__) + ' ' + str([s for s in self.iteritems()])
 
 class RandomGaussianUnitVector(Vector):
     def __init__(self, vector=None, dimensions=None, mu=None, sigma=None):
