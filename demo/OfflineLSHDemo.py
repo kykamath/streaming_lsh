@@ -56,7 +56,7 @@ class OfflineLSHDemo:
         for docId, l in enumerate(FileIO.iterateLinesFromFile('../data/train_offline.dat')): traningDocumentsMap[docId] = createDocumentFromLine(docId, l)
         # Construct cluster vectors.
         clusterToDocumentsMap = defaultdict(list)
-        for document in traningDocumentsMap.values(): clusterToDocumentsMap[document.clusterType].append(document.vector)
+        for document in traningDocumentsMap.values(): clusterToDocumentsMap[document.clusterType].append(document)
         clusterMap = {}
         for k, v in clusterToDocumentsMap.iteritems(): clusterMap[k]=Document(docId=k, vector=Vector.getMeanVector(v), clusterType=k)
         
@@ -75,7 +75,7 @@ class OfflineLSHDemo:
         predicted, labels = [], []
         for t in testDocumentsMap.values():
             possibleNearestClusters = reduce(lambda x,y:x.union(y), (permutation.getNearestDocuments(t) for permutation in signaturePermutations), set())
-            predictedClass = max(((clusterType, clusterMap[clusterType].vector.cosineSimilarity(t.vector)) for clusterType in possibleNearestClusters), key=itemgetter(1))
+            predictedClass = max(((clusterType, clusterMap[clusterType].cosineSimilarity(t)) for clusterType in possibleNearestClusters), key=itemgetter(1))
             predicted.append(predictedClass[0])
             labels.append(t.clusterType)
         return EvaluationMetrics.purity(predicted, labels)

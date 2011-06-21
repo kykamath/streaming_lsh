@@ -43,13 +43,16 @@ class SignaturePermutation(Permutation):
         nearestSignatureKey=SignatureTrie.getNearestSignatureKey(self.signatureTrie, permutedDocumentSignature)
         return self.signatureTrie[nearestSignatureKey]
     
-class Document:
-    def __init__(self, docId, vector, clusterType = None): self.docId, self.vector, self.clusterType = docId, vector, clusterType
-    def setSignatureUsingVectors(self, vectors): self.signature = Signature(self.vector.dot(v)>=0 for v in vectors)
+class Document(Vector):
+    def __init__(self, docId, vector, clusterType = None):
+        super(Document, self).__init__(vector)
+        self.docId, self.clusterType = docId, clusterType
+#        self.docId, self.vector, self.clusterType = docId, vector, clusterType
+    def setSignatureUsingVectors(self, vectors): self.signature = Signature(self.dot(v)>=0 for v in vectors)
     def setSignatureUsingVectorPermutations(self, vector, vectorPermutations):
         self.signature = Signature('')
         for vp in vectorPermutations:
-            total = sum(self.vector[dimension]*vector[vp.applyFunction(dimension)] for dimension in self.vector)
+            total = sum(self[dimension]*vector[vp.applyFunction(dimension)] for dimension in self)
             self.signature.append(total>=0)
     def __str__(self): return str(self.__dict__)
 
