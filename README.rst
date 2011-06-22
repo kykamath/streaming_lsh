@@ -16,6 +16,3 @@ References
 * Deepak Ravichandran, Patrick Pantel, and Eduard Hovy. 2005. `Randomized algorithms and NLP: using locality sensitive hash function for high speed noun clustering. <http://portal.acm.org/citation.cfm?id=1219917>`_ In Proceedings of the 43rd Annual Meeting on Association for Computational Linguistics (ACL '05). Association for Computational Linguistics, Stroudsburg, PA, USA, 622-629. DOI=10.3115/1219840.1219917
 * Morchen, F.; Brinker, K., and Neubauer, C., Any-time clustering of high frequency news streams. The Thirteenth ACM SIGKDD Int'l. Conference on Knowledge Discovery and Data Mining: Data Mining Case Studies Workshop (DMCS), August 2007.
 * Benjamin Van Durme and Ashwin Lall. 2010. `Online generation of locality sensitive hash signatures. <http://portal.acm.org/citation.cfm?id=1858885>`_ In Proceedings of the ACL 2010 Conference Short Papers (ACLShort '10). Association for Computational Linguistics, Stroudsburg, PA, USA, 231-235.
-
-Demo
-========
