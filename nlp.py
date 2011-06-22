@@ -22,6 +22,15 @@ def isEnglish(sentance, threshold=0.3):
     if englishWords/totalWords > threshold: return True
     return False
 
+def getPhrases(items, minPhraseLength, maxPhraseLength):
+    def groupPhrases(items, groups, size):
+        itemsLen = len(items)
+        for i in range(itemsLen): 
+            if i+size<itemsLen+1: groups.append(' '.join(items[i:i+size]))
+    groups = [i for i in items if i[0]=='#']
+    for size in range(minPhraseLength, maxPhraseLength+1): groupPhrases(items, groups, size)
+    return groups
+
 class StopWords:
     list = None
     @staticmethod
@@ -50,7 +59,3 @@ def getWordsFromRawEnglishMessage(message, check_stop_words=True):
         returnWords = filter(lambda w: len(w)>2, returnWords)
     if check_stop_words: return filter(lambda w: not StopWords.contains(w) and len(w)>2, returnWords)
     else: return filter(lambda w: len(w)>2, returnWords)
-
-if __name__ == '__main__':
-    import sys
-    print '/'.join(sys.argv[0].split('/')[:-1])
