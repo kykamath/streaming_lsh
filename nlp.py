@@ -4,9 +4,9 @@ Created on Jun 14, 2011
 @author: kykamath
 '''
 
-import enchant, cjson, re, sys
+import enchant, cjson, re
 
-current_directory = '/'.join(sys.argv[0].split('/')[:-1])
+current_directory = '/'.join(__file__.split('/')[:-1])
 twitter_stop_words_file=current_directory+'/data/stop_words.json'
 twitter_stop_words_over_threshold_percentage = 0.5
 
