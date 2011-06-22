@@ -100,4 +100,3 @@ class VectorPermutation(Permutation):
             if not randomGaussianUnitVector.isPermutationSameAsVector(vectorPermutation): 
                 if vectorPermutation not in vectorPermutations: vectorPermutations.append(vectorPermutation)
         return vectorPermutations
-    
