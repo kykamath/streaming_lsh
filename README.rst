@@ -1,5 +1,5 @@
 =============
-Streaming-LSH
+Streaming LSH
 =============
 :Description: A project for clustering text streams using locality-sensitive hashing (LSH) in Python.
 :Author: Krishna Y. Kamath
