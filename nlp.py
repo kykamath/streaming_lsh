@@ -27,7 +27,7 @@ class StopWords:
     def load(extra_terms=['#p2', '#ff', '#fb']):
         if StopWords.list == None: 
             StopWords.list = {}
-            stop_word_candidates = cjson.load(open(twitter_stop_words_file))
+            stop_word_candidates = cjson.decode(open(twitter_stop_words_file))
             for stop_word_candidate in stop_word_candidates:
                 if stop_word_candidates[stop_word_candidate]['ot'] >= twitter_stop_words_over_threshold_percentage: StopWords.list[stop_word_candidate]=True
             for term in extra_terms: StopWords.list[term] = True
