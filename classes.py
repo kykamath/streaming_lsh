@@ -39,15 +39,16 @@ class SignaturePermutation(Permutation):
         if self.signatureTrie.has_key(permutedDocumentSignatureKey): self.signatureTrie[permutedDocumentSignatureKey].add(document.docId)
         else: self.signatureTrie[permutedDocumentSignatureKey] = set([document.docId])
     def getNearestDocuments(self, document):
+        if len(self.signatureTrie)==0: return set()
         permutedDocumentSignature = document.signature.permutate(self)
         nearestSignatureKey=SignatureTrie.getNearestSignatureKey(self.signatureTrie, permutedDocumentSignature)
         return self.signatureTrie[nearestSignatureKey]
     
 class Document(Vector):
-    def __init__(self, docId, vector, clusterType = None):
+    def __init__(self, docId, vector, clusterId = None):
         super(Document, self).__init__(vector)
-        self.docId, self.clusterType = docId, clusterType
-#        self.docId, self.vector, self.clusterType = docId, vector, clusterType
+        self.docId, self.clusterId = docId, clusterId
+#        self.docId, self.vector, self.clusterId = docId, vector, clusterId
     def setSignatureUsingVectors(self, vectors): self.signature = Signature(self.dot(v)>=0 for v in vectors)
     def setSignatureUsingVectorPermutations(self, vector, vectorPermutations):
         self.signature = Signature('')
@@ -65,7 +66,27 @@ class RandomGaussianUnitVector(Vector):
     def getPermutedVector(self, permutation): return RandomGaussianUnitVector(dict([(k, self.getPermutedDimensionValue(permutation, k)) for k in self]))
     def getPermutedDimensionValue(self, permutation, dimension): return self[permutation.applyFunction(dimension)]
     def isPermutationSameAsVector(self, permutation): return range(self.dimension)==[permutation.applyFunction(i) for i in range(self.dimension)]
-    
+
+class Cluster(Document):
+    clusterIdCounter = 0
+    def __init__(self, vector):
+        clusterId = 'cluster_%s'%Cluster.clusterIdCounter
+        Cluster.clusterIdCounter+=1
+        super(Cluster, self).__init__(clusterId, vector)
+        self.clusterId, self.aggregateVector, self.vectorWeights = clusterId, vector, 1.
+        self.documentsInCluster = {}
+    def addDocument(self, document):
+        self.aggregateVector+=document
+        self.vectorWeights+=1
+        for k in self.aggregateVector: self[k]=self.aggregateVector[k]/self.vectorWeights
+        document.clusterId = self.clusterId
+        self.documentsInCluster[document.docId] = document
+    def iterateDocumentsInCluster(self): 
+        documentsToDelete = []
+        for doc in self.documentsInCluster: 
+            if self.documentsInCluster[doc].clusterId == self.clusterId: yield self.documentsInCluster[doc]
+            else: documentsToDelete.append(doc)
+        for doc in documentsToDelete: del self.documentsInCluster[doc]
 
 class VectorPermutation(Permutation):
     '''

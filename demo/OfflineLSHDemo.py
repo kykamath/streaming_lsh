@@ -38,7 +38,7 @@ class OfflineLSHDemo:
                 wordDimension = wordToDimensionMap[word]
                 if wordDimension not in vector: vector[wordDimension]=1
                 else: vector[wordDimension]+=1
-            return Document(docId, vector, clusterType=words[0])
+            return Document(docId, vector, clusterId=words[0])
         
         dimensions = 53
         signatureLength=13
@@ -56,9 +56,9 @@ class OfflineLSHDemo:
         for docId, l in enumerate(FileIO.iterateLinesFromFile('../data/train_offline.dat')): traningDocumentsMap[docId] = createDocumentFromLine(docId, l)
         # Construct cluster vectors.
         clusterToDocumentsMap = defaultdict(list)
-        for document in traningDocumentsMap.values(): clusterToDocumentsMap[document.clusterType].append(document)
+        for document in traningDocumentsMap.values(): clusterToDocumentsMap[document.clusterId].append(document)
         clusterMap = {}
-        for k, v in clusterToDocumentsMap.iteritems(): clusterMap[k]=Document(docId=k, vector=Vector.getMeanVector(v), clusterType=k)
+        for k, v in clusterToDocumentsMap.iteritems(): clusterMap[k]=Document(docId=k, vector=Vector.getMeanVector(v), clusterId=k)
         
         # Create signatures and signaturePermutations for all the clusters.
         map(lambda document: document.setSignatureUsingVectors(permutatedUnitVectors), clusterMap.values())
@@ -75,9 +75,9 @@ class OfflineLSHDemo:
         predicted, labels = [], []
         for t in testDocumentsMap.values():
             possibleNearestClusters = reduce(lambda x,y:x.union(y), (permutation.getNearestDocuments(t) for permutation in signaturePermutations), set())
-            predictedClass = max(((clusterType, clusterMap[clusterType].cosineSimilarity(t)) for clusterType in possibleNearestClusters), key=itemgetter(1))
+            predictedClass = max(((clusterId, clusterMap[clusterId].cosineSimilarity(t)) for clusterId in possibleNearestClusters), key=itemgetter(1))
             predicted.append(predictedClass[0])
-            labels.append(t.clusterType)
+            labels.append(t.clusterId)
         return EvaluationMetrics.purity(predicted, labels)
             
 if __name__ == '__main__':

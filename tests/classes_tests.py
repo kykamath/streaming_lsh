@@ -7,8 +7,8 @@ import sys, math, unittest
 sys.path.append('../')
 from Bio import trie
 from classes import Signature, SignaturePermutation, SignatureTrie, Document,\
-    RandomGaussianUnitVector, Permutation, VectorPermutation
-from library.vector import VectorGenerator
+    RandomGaussianUnitVector, Permutation, VectorPermutation, Cluster
+from library.vector import VectorGenerator, Vector
 from library.math_modified import ModularArithmetic
 
 class SignatureTests(unittest.TestCase):
@@ -26,7 +26,7 @@ class SignatureTrieTests(unittest.TestCase):
         self.tr = trie.trie()
         self.tr['1000']=12;self.tr['1011']=12; self.tr['1010']=12
     def test_getNearestSignature_exactKey(self): self.assertEquals(SignatureTrie.getNearestSignatureKey(self.tr, Signature('1000')), '1000')
-    def test_getNearestSignature_nearbyKey(self): self.assertEquals(SignatureTrie.getNearestSignatureKey(self.tr, Signature('1100')), '1000')    
+    def test_getNearestSignature_nearbyKey(self): self.assertEquals(SignatureTrie.getNearestSignatureKey(self.tr, Signature('1100')), '1000')
 
 class PermutationTests(unittest.TestCase):
     def setUp(self): self.pm = Permutation(maximumValue=13)
@@ -92,6 +92,9 @@ class SignaturePermutationTests(unittest.TestCase):
         newDocWithANearbySignature.signature = Signature(exactSignature[:-1]+digitReplacement[exactSignature[-1]])
         self.assertNotEquals(self.doc1.signature.to01(), newDocWithANearbySignature.signature.to01())
         self.assertEqual(self.pm.getNearestDocuments(newDocWithANearbySignature), set([1])) # This assertion can sometimes fail because of randomization. Run the tests again. It's OK!
+    def test_getNearestDocument_emptyTrie(self):
+        permutationWithEmptyTrie = SignaturePermutation(signatureLength=self.signatureLength)
+        self.assertEqual(permutationWithEmptyTrie.getNearestDocuments(self.doc1), set())
 
 class RandomGaussianUnitVectorTests(unittest.TestCase):
     def setUp(self): 
@@ -109,5 +112,48 @@ class RandomGaussianUnitVectorTests(unittest.TestCase):
         self.permutation.b=0
         self.assertTrue(self.vector.isPermutationSameAsVector(self.permutation))
 
+class ClusterTests(unittest.TestCase):
+    def setUp(self): 
+        Cluster.clusterIdCounter = 0
+        self.cluster1 = Cluster(Vector({1:2,2:4}))
+        self.cluster2 = Cluster(Vector({2:4}))
+    
+    def test_initialization(self):
+        self.assertEqual('cluster_0', self.cluster1.clusterId)
+        self.assertEqual('cluster_1', self.cluster2.clusterId)
+        self.assertEqual(2, Cluster.clusterIdCounter)
+    
+    def test_addDocument(self):
+        doc1 = Document(1, Vector({3:4}))
+        doc2 = Document(2, Vector({2:4}))
+        
+        self.cluster1.addDocument(doc1)
+        # Test if cluster id is set.
+        self.assertEqual(self.cluster1.clusterId, doc1.clusterId)
+        # Test that cluster mean is updated.
+        self.assertEqual({1:2/2.,2:2.,3:2.}, self.cluster1)
+        # Test that cluster aggrefate is updated.
+        self.assertEqual({1:2,2:4,3:4}, self.cluster1.aggregateVector)
+        # Test that document is added to cluster documents.
+        self.assertEqual(doc1, self.cluster1.documentsInCluster[doc1.docId])
+        
+        self.cluster1.addDocument(doc2)
+        self.assertEqual(3, self.cluster1.vectorWeights)
+        self.assertEqual({1:2/3.,2:8/3.,3:4/3.}, self.cluster1)
+        self.assertEqual({1:2,2:8,3:4}, self.cluster1.aggregateVector)
+        
+    def test_iterateDocumentsInCluster(self):
+        doc1 = Document(1, Vector({3:4}))
+        doc2 = Document(2, Vector({2:4}))
+        # Test normal iteration.
+        self.cluster1.addDocument(doc1)
+        self.cluster1.addDocument(doc2)
+        self.assertEqual([doc1, doc2], list(self.cluster1.iterateDocumentsInCluster()))
+        # Test removal of document from cluster, if the document is added to a different cluster.
+        self.cluster2.addDocument(doc2)
+        self.assertEqual([doc1], list(self.cluster1.iterateDocumentsInCluster()))
+        self.assertEqual(1, len(self.cluster1.documentsInCluster))
+        self.assertEqual([doc2], list(self.cluster2.iterateDocumentsInCluster()))
+        
 if __name__ == '__main__':
     unittest.main()
