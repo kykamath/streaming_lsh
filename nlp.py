@@ -4,9 +4,10 @@ Created on Jun 14, 2011
 @author: kykamath
 '''
 
-import enchant, cjson, re
+import enchant, cjson, re, sys
 
-twitter_stop_words_file='data/stop_words.json'
+current_directory = '/'.join(sys.argv[0].split('/')[:-1])
+twitter_stop_words_file=current_directory+'/data/stop_words.json'
 twitter_stop_words_over_threshold_percentage = 0.5
 
 pattern = re.compile('[\W_]+')
@@ -49,3 +50,7 @@ def getWordsFromRawEnglishMessage(message, check_stop_words=True):
         returnWords = filter(lambda w: len(w)>2, returnWords)
     if check_stop_words: return filter(lambda w: not StopWords.contains(w) and len(w)>2, returnWords)
     else: return filter(lambda w: len(w)>2, returnWords)
+
+if __name__ == '__main__':
+    import sys
+    print '/'.join(sys.argv[0].split('/')[:-1])
