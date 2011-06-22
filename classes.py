@@ -7,7 +7,7 @@ import random
 from bitarray import bitarray
 from Bio import trie
 from library.vector import VectorGenerator, Vector
-from library.math_modified import isPrime, ModularArithmetic
+from library.math_modified import isPrime
 
 class SignatureTrie:
     @staticmethod
@@ -48,7 +48,6 @@ class Document(Vector):
     def __init__(self, docId, vector, clusterId = None):
         super(Document, self).__init__(vector)
         self.docId, self.clusterId = docId, clusterId
-#        self.docId, self.vector, self.clusterId = docId, vector, clusterId
     def setSignatureUsingVectors(self, vectors): self.signature = Signature(self.dot(v)>=0 for v in vectors)
     def setSignatureUsingVectorPermutations(self, vector, vectorPermutations):
         self.signature = Signature('')

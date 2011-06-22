@@ -49,11 +49,9 @@ class DocumentTests(unittest.TestCase):
         unitVector = RandomGaussianUnitVector(dimensions=dimensions, mu=0, sigma=1)
         vectorPermutations = VectorPermutation.getPermutations(signatureLength, dimensions, unitVector)
         permutatedUnitVectors = [unitVector.getPermutedVector(r) for r in vectorPermutations]
-        
         documentVector = VectorGenerator.getRandomGaussianUnitVector(dimension=dimensions, mu=0, sigma=1)
         documentWithSignatureByVectors=Document(1, documentVector)
         documentWithSignatureByVectorPermutations=Document(2, documentVector)
-        
         documentWithSignatureByVectors.setSignatureUsingVectors(permutatedUnitVectors)
         documentWithSignatureByVectorPermutations.setSignatureUsingVectorPermutations(unitVector, vectorPermutations)
         self.assertEqual(documentWithSignatureByVectors.signature, documentWithSignatureByVectorPermutations.signature)
@@ -62,28 +60,23 @@ class SignaturePermutationTests(unittest.TestCase):
     def setUp(self):
         self.dimension, self.signatureLength = 50, 23
         self.unitRandomVectors = [VectorGenerator.getRandomGaussianUnitVector(dimension=self.dimension, mu=0, sigma=1) for i in range(self.signatureLength)]
-        
         self.doc1=Document(1, VectorGenerator.getRandomGaussianUnitVector(dimension=self.dimension, mu=0, sigma=1))
         self.doc2=Document(2, VectorGenerator.getRandomGaussianUnitVector(dimension=self.dimension, mu=0, sigma=1))
         self.doc1.setSignatureUsingVectors(self.unitRandomVectors); self.doc2.setSignatureUsingVectors(self.unitRandomVectors)
-        
         self.pm = SignaturePermutation(signatureLength=self.signatureLength)
         self.pm.addDocument(self.doc1)
         self.pm.addDocument(self.doc2)
-        
     def test_addDocument_newKey(self):
         doc1=Document(1, VectorGenerator.getRandomGaussianUnitVector(dimension=self.dimension, mu=0, sigma=1))
         doc1.setSignatureUsingVectors(self.unitRandomVectors)
         pm = SignaturePermutation(signatureLength=self.signatureLength)
         pm.addDocument(doc1)
         self.assertEqual(pm.signatureTrie[doc1.signature.permutate(pm).to01()], set([1]))
-        
     def test_addDocument_existingKey(self):
         newDocModifiedWithExistingSignature = Document(3, VectorGenerator.getRandomGaussianUnitVector(dimension=self.dimension, mu=0, sigma=1))
         newDocModifiedWithExistingSignature.signature = Signature(self.doc1.signature.to01())
         self.pm.addDocument(newDocModifiedWithExistingSignature)
         self.assertEqual(self.pm.signatureTrie[self.doc1.signature.permutate(self.pm).to01()], set([1, 3]))
-        
     def test_getNearestDocument_usingAKeyAlreadyInTrie(self): self.assertEqual(self.pm.getNearestDocuments(self.doc1), set([1]))
     def test_getNearestDocument_usingANearbyKeyInTrie(self):
         digitReplacement = {'0': '1', '1': '0'}
@@ -117,16 +110,13 @@ class ClusterTests(unittest.TestCase):
         Cluster.clusterIdCounter = 0
         self.cluster1 = Cluster(Vector({1:2,2:4}))
         self.cluster2 = Cluster(Vector({2:4}))
-    
     def test_initialization(self):
         self.assertEqual('cluster_0', self.cluster1.clusterId)
         self.assertEqual('cluster_1', self.cluster2.clusterId)
         self.assertEqual(2, Cluster.clusterIdCounter)
-    
     def test_addDocument(self):
         doc1 = Document(1, Vector({3:4}))
         doc2 = Document(2, Vector({2:4}))
-        
         self.cluster1.addDocument(doc1)
         # Test if cluster id is set.
         self.assertEqual(self.cluster1.clusterId, doc1.clusterId)
@@ -136,12 +126,10 @@ class ClusterTests(unittest.TestCase):
         self.assertEqual({1:2,2:4,3:4}, self.cluster1.aggregateVector)
         # Test that document is added to cluster documents.
         self.assertEqual(doc1, self.cluster1.documentsInCluster[doc1.docId])
-        
         self.cluster1.addDocument(doc2)
         self.assertEqual(3, self.cluster1.vectorWeights)
         self.assertEqual({1:2/3.,2:8/3.,3:4/3.}, self.cluster1)
         self.assertEqual({1:2,2:8,3:4}, self.cluster1.aggregateVector)
-        
     def test_iterateDocumentsInCluster(self):
         doc1 = Document(1, Vector({3:4}))
         doc2 = Document(2, Vector({2:4}))
