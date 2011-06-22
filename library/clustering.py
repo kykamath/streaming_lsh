@@ -69,8 +69,11 @@ class EvaluationMetrics:
 
     @staticmethod
     def getValueForClusters(predicted, evaluationMethod):
-        predicted, labels = EvaluationMetrics._getPredictedAndLabels(predicted)
-        return evaluationMethod(predicted, labels)
+        predictedModified = [p for p in predicted if p]
+        if predictedModified:
+            predicted, labels = EvaluationMetrics._getPredictedAndLabels(predictedModified)
+            return evaluationMethod(predicted, labels)
+        else: return 0
 
 class TrainingAndTestDocuments:
     @staticmethod

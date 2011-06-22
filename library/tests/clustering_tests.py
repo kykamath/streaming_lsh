@@ -15,8 +15,9 @@ class EvaluationMetricsTests(unittest.TestCase):
                     ['technology', 'technology', 'politics', 'technology'],
                     ['politics', 'politics', 'politics', 'politics']
                     ]
-    def test_getValueForClusters(self):
-        self.assertEquals(0.875, EvaluationMetrics.getValueForClusters(self.clusters, EvaluationMetrics.purity))
-        
+    def test_getValueForClusters(self): self.assertEqual(0.875, EvaluationMetrics.getValueForClusters(self.clusters, EvaluationMetrics.purity))
+    def test_getValueForClustersWithEmpltyClusters(self): self.assertEqual(0.0, EvaluationMetrics.getValueForClusters([[]], EvaluationMetrics.purity))
+    
+    
 if __name__ == '__main__':
     unittest.main()
