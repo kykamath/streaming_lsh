@@ -1,4 +1,15 @@
 '''
+A demo for clustering text document using locality sensitive hashing.
+
+Command to run the demo: python OnlineLSHDemo.py
+
+The input document used in this demo is in the following format:
+<cluster_id> <document>
+Example:
+1 abc def efe tert ertre
+2 sdf ertr frf frfe
+1 sdfds sdfdsf dsfewf
+
 Created on Jun 16, 2011
 
 @author: kykamath
