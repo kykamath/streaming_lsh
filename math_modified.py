@@ -9,6 +9,12 @@ import math, numpy
 def modified_log(i):
     if i==0: return 1
     else: return math.log(i)
+    
+def exponentialDecay(currentValue, decayCoefficient, timeDifference):
+    '''
+    The function V_n = V_o*D**t
+    '''
+    return currentValue*(decayCoefficient**timeDifference)
 
 def isPrime(number):
     '''
