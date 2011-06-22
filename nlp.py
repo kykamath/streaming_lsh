@@ -4,7 +4,7 @@ Created on Jun 14, 2011
 @author: kykamath
 '''
 
-import enchant, cjson, re
+import enchant, json, re
 
 current_directory = '/'.join(__file__.split('/')[:-1])
 twitter_stop_words_file=current_directory+'/data/stop_words.json'
@@ -28,7 +28,7 @@ class StopWords:
     def load(extra_terms=['#p2', '#ff', '#fb']):
         if StopWords.list == None: 
             StopWords.list = {}
-            stop_word_candidates = cjson.decode(open(twitter_stop_words_file))
+            stop_word_candidates = json.load(open(twitter_stop_words_file))
             for stop_word_candidate in stop_word_candidates:
                 if stop_word_candidates[stop_word_candidate]['ot'] >= twitter_stop_words_over_threshold_percentage: StopWords.list[stop_word_candidate]=True
             for term in extra_terms: StopWords.list[term] = True
