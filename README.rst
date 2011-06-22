@@ -6,8 +6,8 @@ Streaming-LSH
 
 Dependancies
 =============
-* bitarray <http://pypi.python.org/pypi/bitarray>
-* Biopython <http://biopython.org/>
+* `bitarray <http://pypi.python.org/pypi/bitarray>`_
+* `Biopython <http://biopython.org/>`_
 
 References          
 ==============
