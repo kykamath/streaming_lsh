@@ -50,3 +50,9 @@ class ModularArithmetic:
         (d_, x_, y_) = ModularArithmetic.gcdExtended(b, a%b)
         (d,x,y)=(d_, y_, x_-(a//b)*y_)
         return (d,x,y)
+    
+class DateTimeAirthematic:
+    @staticmethod
+    def getDifferenceInTimeUnits(time1, time2, timeUnitInSeconds):
+        if time1<time2: return (time2-time1).seconds/timeUnitInSeconds
+        return (time1-time2).seconds/timeUnitInSeconds
