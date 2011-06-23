@@ -16,5 +16,4 @@ class TweetFiles:
                 if 'text' in data: yield data
             except: pass
         
-@staticmethod
 def getDateTimeObjectFromTweetTimestamp(timeStamp): return datetime.strptime(timeStamp, '%a %b %d %H:%M:%S +0000 %Y')
