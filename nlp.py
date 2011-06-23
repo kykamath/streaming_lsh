@@ -34,7 +34,7 @@ def getPhrases(items, minPhraseLength, maxPhraseLength):
 class StopWords:
     list = None
     @staticmethod
-    def load(extra_terms=['#p2', '#ff', '#fb']):
+    def load(extra_terms):
         if StopWords.list == None: 
             StopWords.list = {}
             stop_word_candidates = json.load(open(twitter_stop_words_file))
@@ -47,9 +47,10 @@ class StopWords:
             return StopWords.list[word]
         except KeyError: return False
         
-def getWordsFromRawEnglishMessage(message, check_stop_words=True):
+def getWordsFromRawEnglishMessage(message, check_stop_words=True, extra_terms=['#p2', '#ff', '#fb']):
     returnWords = []
     if isEnglish(message.lower()):
+        if StopWords.list==None: StopWords.load(extra_terms)
         def matchTag(tag): 
                 if tag in ['N'] or tag[:2] in ['NN', 'NP', 'NR']: return True
         message = filter(lambda x: not x.startswith('@') and not x.startswith('http:'), message.lower().split())
@@ -57,5 +58,5 @@ def getWordsFromRawEnglishMessage(message, check_stop_words=True):
             if word[0]=='#': returnWords.append(str('#'+pattern.sub('', word)))
             else: returnWords.append(str(pattern.sub('', word)))
         returnWords = filter(lambda w: len(w)>2, returnWords)
-    if check_stop_words: return filter(lambda w: not StopWords.contains(w) and len(w)>2, returnWords)
-    else: return filter(lambda w: len(w)>2, returnWords)
+        if check_stop_words: return filter(lambda w: not StopWords.contains(w) and len(w)>2, returnWords)
+        else: return filter(lambda w: len(w)>2, returnWords)
