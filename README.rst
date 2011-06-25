@@ -4,6 +4,10 @@ Streaming LSH
 :Description: A project for clustering text streams using locality-sensitive hashing (LSH) in Python.
 :Author: Krishna Y. Kamath
 
+Demo
+=======
+For a demo of how to use this class take a look at the Python module in ``demo/StreamingLSHClusteringDemo.py``
+
 Dependancies
 =============
 * `bitarray <http://pypi.python.org/pypi/bitarray>`_

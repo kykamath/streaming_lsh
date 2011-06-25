@@ -8,39 +8,27 @@ from classes import RandomGaussianUnitVector, VectorPermutation,\
 from operator import itemgetter
 
 class StreamingLSHClustering:
-    def __init__(self, documentIterator, **clustering_settings):
-        dimensions = clustering_settings['dimensions']
-        signatureLength=clustering_settings['signature_length']
-        numberOfPermutations = clustering_settings['number_of_permutations']
-        thresholdForDocumentToBeInACluster = clustering_settings['threshold_for_document_to_be_in_cluster']
-        
-        unitVector = RandomGaussianUnitVector(dimensions=dimensions, mu=0, sigma=1)
-        vectorPermutations = VectorPermutation.getPermutations(signatureLength, dimensions, unitVector)
-        signaturePermutations = [SignaturePermutation(signatureLength) for i in range(numberOfPermutations)]
-        
-        
-        # Process the stream.
-#        docId = 0
-#        docsToOriginalClusterMap = {}
-        clusterMap = {}
-        for document in documentIterator:
-#            docsToOriginalClusterMap[docId] = document.clusterId
-#            docId+=1
-            document.setSignatureUsingVectorPermutations(unitVector, vectorPermutations)
-            # Get nearest cluster is different permutations
-            # If nearest clusters exist AND above threshold,
-            #    Update the neigbours mean with the document
-            #    Mark the document to belong to a cluster id
-            # If no neighbors,
-            #    Create a new cluster. Add the document as new cluster
-            #    Add the cluster to all permutations.
-            predictedCluster = None
-            possibleNearestClusters = reduce(lambda x,y:x.union(y), (permutation.getNearestDocuments(document) for permutation in signaturePermutations), set())
-            if possibleNearestClusters: predictedCluster = max(((clusterId, clusterMap[clusterId].cosineSimilarity(document)) for clusterId in possibleNearestClusters), key=itemgetter(1))
-            if predictedCluster and predictedCluster[1]>=thresholdForDocumentToBeInACluster:
-                clusterMap[predictedCluster[0]].addDocument(document)
-            else:
-                newCluster = Cluster(document)
-                newCluster.setSignatureUsingVectorPermutations(unitVector, vectorPermutations)
-                for permutation in signaturePermutations: permutation.addDocument(newCluster)
-                clusterMap[newCluster.clusterId] = newCluster
+    def __init__(self, **clustering_settings):
+        self.thresholdForDocumentToBeInACluster = clustering_settings['threshold_for_document_to_be_in_cluster']
+        self.unitVector = RandomGaussianUnitVector(dimensions=clustering_settings['dimensions'], mu=0, sigma=1)
+        self.vectorPermutations = VectorPermutation.getPermutations(clustering_settings['signature_length'], clustering_settings['dimensions'], self.unitVector)
+        self.signaturePermutations = [SignaturePermutation(clustering_settings['signature_length']) for i in range(clustering_settings['number_of_permutations'])]
+        self.clusterMap = {}
+    
+    def getClusterForDocument(self, document):
+        document.setSignatureUsingVectorPermutations(self.unitVector, self.vectorPermutations)
+        predictedCluster = None
+        possibleNearestClusters = reduce(lambda x,y:x.union(y), (permutation.getNearestDocuments(document) for permutation in self.signaturePermutations), set())
+        if possibleNearestClusters: predictedCluster = max(((clusterId, self.clusterMap[clusterId].cosineSimilarity(document)) for clusterId in possibleNearestClusters), key=itemgetter(1))
+        if predictedCluster and predictedCluster[1]>=self.thresholdForDocumentToBeInACluster:return predictedCluster[0]
+    
+    def getClusterAndUpdateExistingClusters(self, document):
+        predictedCluster = self.getClusterForDocument(document)
+        if predictedCluster!=None:
+            self.clusterMap[predictedCluster].addDocument(document)
+        else:
+            newCluster = Cluster(document)
+            newCluster.setSignatureUsingVectorPermutations(self.unitVector, self.vectorPermutations)
+            for permutation in self.signaturePermutations: permutation.addDocument(newCluster)
+            self.clusterMap[newCluster.clusterId] = newCluster
+                
