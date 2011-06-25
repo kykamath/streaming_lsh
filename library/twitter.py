@@ -5,6 +5,7 @@ Created on Jun 14, 2011
 '''
 
 import cjson, gzip
+from datetime import datetime
 
 class TweetFiles:
     @staticmethod
@@ -14,3 +15,5 @@ class TweetFiles:
                 data = cjson.decode(line)
                 if 'text' in data: yield data
             except: pass
+        
+def getDateTimeObjectFromTweetTimestamp(timeStamp): return datetime.strptime(timeStamp, '%a %b %d %H:%M:%S +0000 %Y')

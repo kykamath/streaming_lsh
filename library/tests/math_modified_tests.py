@@ -5,7 +5,9 @@ Created on Jun 17, 2011
 '''
 
 import unittest
-from math_modified import isPrime, ModularArithmetic
+from math_modified import isPrime, ModularArithmetic, exponentialDecay,\
+    DateTimeAirthematic
+from datetime import datetime, timedelta
 
 class MathModifiedTests(unittest.TestCase):
     def test_isPrime(self):
@@ -15,7 +17,13 @@ class MathModifiedTests(unittest.TestCase):
         self.assertTrue(isPrime(13))
         self.assertFalse(isPrime(10))
         self.assertTrue(isPrime(101))
-    
+    def test_exponentialDecay(self):
+        self.assertEqual(16, exponentialDecay(currentValue=16, decayCoefficient=1, timeDifference=2))
+        self.assertEqual(8, exponentialDecay(currentValue=16, decayCoefficient=0.5, timeDifference=1))
+        self.assertEqual(4, exponentialDecay(currentValue=16, decayCoefficient=0.5, timeDifference=2))
+        self.assertEqual(0, exponentialDecay(currentValue=16, decayCoefficient=0, timeDifference=2))
+        self.assertEqual(16, exponentialDecay(currentValue=16, decayCoefficient=0, timeDifference=0))
+        
 class ModularArithmeticTests(unittest.TestCase):
     def test_gcd(self): 
         self.assertEqual(3, ModularArithmetic.gcd(30,21))
@@ -24,6 +32,12 @@ class ModularArithmeticTests(unittest.TestCase):
     def test_gcdExtended(self):
         self.assertEqual((3,-11,14), ModularArithmetic.gcdExtended(99, 78))
         self.assertEqual((10,1,0), ModularArithmetic.gcdExtended(10,0))
+
+class DateTimeAirthematicTests(unittest.TestCase):
+    def test_getDifferenceInTimeUnits(self):
+        self.assertEqual(1, DateTimeAirthematic.getDifferenceInTimeUnits(datetime(2010,10,12,10,31), datetime(2010,10,12,10,30), 60))
+        self.assertEqual(4, DateTimeAirthematic.getDifferenceInTimeUnits(datetime(2010,10,12,10,31), datetime(2010,10,12,10,30), 15))
+        self.assertEqual(1, DateTimeAirthematic.getDifferenceInTimeUnits(datetime(2010,10,12,10,30), datetime(2010,10,12,10,46), 15*60))
         
 if __name__ == '__main__':
     unittest.main()
