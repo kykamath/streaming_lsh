@@ -18,6 +18,7 @@ class StreamingLSHClustering:
         vectorPermutations = VectorPermutation.getPermutations(signatureLength, dimensions, unitVector)
         signaturePermutations = [SignaturePermutation(signatureLength) for i in range(numberOfPermutations)]
         
+        
         # Process the stream.
 #        docId = 0
 #        docsToOriginalClusterMap = {}
