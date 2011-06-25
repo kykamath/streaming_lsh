@@ -6,7 +6,7 @@ Streaming LSH
 
 Demo
 =======
-For a demo of how to use this class take a look at the Python module in ``demo/StreamingLSHClusteringDemo.py``
+For a demo of how to use this class take a look at the Python module:   ``demo/StreamingLSHClusteringDemo.py``
 
 Dependancies
 =============
