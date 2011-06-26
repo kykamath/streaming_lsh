@@ -49,7 +49,7 @@ def streamingLSHClusteringDemo():
         docId+=1
         clustering.getClusterAndUpdateExistingClusters(document)
     clusterLabels = []
-    for k, cluster in clustering.clusterMap.iteritems(): clusterLabels.append([docsToOriginalClusterMap[doc.docId] for doc in cluster.iterateDocumentsInCluster()])
+    for k, cluster in clustering.clusters.iteritems(): clusterLabels.append([docsToOriginalClusterMap[doc.docId] for doc in cluster.iterateDocumentsInCluster()])
     return EvaluationMetrics.getValueForClusters(clusterLabels, EvaluationMetrics.purity)
         
 if __name__ == '__main__':
