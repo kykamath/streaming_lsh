@@ -6,7 +6,7 @@ Created on Jun 23, 2011
 import unittest, sys
 sys.path.append('../')
 from datetime import datetime, timedelta
-from classes import GeneralMethods, TwoWayDict
+from classes import GeneralMethods, TwoWayMap
 
 test_time = datetime.now()
 
@@ -22,13 +22,15 @@ class GeneralMethodsTests(unittest.TestCase):
 
 class TwoWayDictTests(unittest.TestCase):
     def test_basicOperation(self):
-        twoWayDict = TwoWayDict()
-        self.assertRaises(TypeError, twoWayDict.set, (5, 1, 2))
-        twoWayDict.set(TwoWayDict.MAP_FORWARD, 'a', 'A')
-        twoWayDict.set(TwoWayDict.MAP_REVERSE, 'B', 'b')
-        self.assertEqual('A', twoWayDict.get(TwoWayDict.MAP_FORWARD, 'a'))
-        self.assertEqual('a', twoWayDict.get(TwoWayDict.MAP_REVERSE, 'A'))
-        self.assertEqual('B', twoWayDict.get(TwoWayDict.MAP_FORWARD, 'b'))
-        self.assertEqual('b', twoWayDict.get(TwoWayDict.MAP_REVERSE, 'B'))
+        twoWayMap = TwoWayMap()
+        self.assertRaises(TypeError, twoWayMap.set, (5, 1, 2))
+        twoWayMap.set(TwoWayMap.MAP_FORWARD, 'a', 'A')
+        twoWayMap.set(TwoWayMap.MAP_REVERSE, 'B', 'b')
+        self.assertEqual('A', twoWayMap.get(TwoWayMap.MAP_FORWARD, 'a'))
+        self.assertEqual('a', twoWayMap.get(TwoWayMap.MAP_REVERSE, 'A'))
+        self.assertEqual('B', twoWayMap.get(TwoWayMap.MAP_FORWARD, 'b'))
+        self.assertEqual('b', twoWayMap.get(TwoWayMap.MAP_REVERSE, 'B'))
+        self.assertEqual({'a':'A', 'b':'B'}, twoWayMap.getMap(twoWayMap.MAP_FORWARD))
+        self.assertEqual({'A':'a', 'B':'b'}, twoWayMap.getMap(twoWayMap.MAP_REVERSE))
 if __name__ == '__main__':
     unittest.main()
