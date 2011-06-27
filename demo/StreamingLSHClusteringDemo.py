@@ -15,25 +15,33 @@ Created on Jun 16, 2011
 @author: kykamath
 '''
 import sys
+from streaming_lsh_clustering import StreamingLSHClustering
 sys.path.append('../')
 import numpy
 from library.file_io import FileIO 
 from classes import Document
 from library.vector import Vector
 from library.clustering import EvaluationMetrics
-from StreamingLSHClustering import StreamingLSHClustering
 
-wordToDimensionMap = {}
+#wordToDimensionMap = {}
+#def createDocumentFromLine(docId, line):
+#    global wordToDimensionMap
+#    vector = Vector()
+#    words = line.split()
+#    for word in words[1:]:
+#        if word not in wordToDimensionMap: wordToDimensionMap[word]=len(wordToDimensionMap)
+#        wordDimension = wordToDimensionMap[word]
+#        if wordDimension not in vector: vector[wordDimension]=1
+#        else: vector[wordDimension]+=1
+#    return Document(docId, vector, clusterId=words[0])
+
 def createDocumentFromLine(docId, line):
-    global wordToDimensionMap
-    vector = Vector()
-    words = line.split()
+    vector, words = Vector(), line.split()
     for word in words[1:]:
-        if word not in wordToDimensionMap: wordToDimensionMap[word]=len(wordToDimensionMap)
-        wordDimension = wordToDimensionMap[word]
-        if wordDimension not in vector: vector[wordDimension]=1
-        else: vector[wordDimension]+=1
+        if word not in vector: vector[word]=1
+        else: vector[word]+=1
     return Document(docId, vector, clusterId=words[0])
+
 
 def streamingLSHClusteringDemo():
     clustering_settings = {'dimensions': 53,

@@ -3,14 +3,34 @@ Created on Jun 14, 2011
 
 @author: kykamath
 '''
-import sys, math, unittest
+import sys, unittest
+from library.classes import TwoWayMap
 sys.path.append('../')
 from Bio import trie
 from classes import Signature, SignaturePermutation, SignatureTrie, Document,\
-    RandomGaussianUnitVector, Permutation, VectorPermutation, Cluster
+    RandomGaussianUnitVector, Permutation, VectorPermutation, Cluster,\
+    UtilityMethods
 from library.vector import VectorGenerator, Vector
-from library.math_modified import ModularArithmetic
 
+settings = {}
+
+class UtilityMethodsTests(unittest.TestCase):
+    def setUp(self):
+        self.phraseVector = {'project':1, 'cluster':1, 'highdimensional':1, 'streams':1}
+        self.phraseTextAndDimensionMap = TwoWayMap()
+        self.phraseTextAndDimensionMap.set(TwoWayMap.MAP_FORWARD, 'project', 0)
+        self.phraseTextAndDimensionMap.set(TwoWayMap.MAP_FORWARD, 'cluster', 1)
+        self.finalPhraseToIdMap = {'project': 0, 'cluster': 1, 'streams': 2, 'highdimensional': 3}
+        settings['dimensions'] = 2
+    def test_updatePhraseTextAndDimensionsMap_PhraseMapHasLesserDimensions(self):
+        settings['dimensions'] = 4
+        UtilityMethods.updatePhraseTextAndDimensionsMap(self.phraseVector, self.phraseTextAndDimensionMap, **settings)
+        self.assertEqual(self.finalPhraseToIdMap, self.phraseTextAndDimensionMap.getMap(TwoWayMap.MAP_FORWARD))
+    def test_updatePhraseTextAndDimensionsMap_PhraseMapHasMaximumDimensions(self):
+        UtilityMethods.updatePhraseTextAndDimensionsMap(self.phraseVector, self.phraseTextAndDimensionMap, **settings)
+        for k in ['streams', 'highdimensional']: del self.finalPhraseToIdMap[k]
+        self.assertEqual(self.finalPhraseToIdMap, self.phraseTextAndDimensionMap.getMap(TwoWayMap.MAP_FORWARD))
+    
 class SignatureTests(unittest.TestCase):
     def test_initialization(self):
         sgnt = Signature('1001011')
@@ -46,29 +66,45 @@ class PermutationTests(unittest.TestCase):
 class DocumentTests(unittest.TestCase):
     def test_setSignatureUsingVectorPermutations(self): 
         dimensions, signatureLength = 53, 13
+        dimensionToPhraseMap = dict([(i, i) for i in range(dimensions)])
+        dimensionToPhraseMapWithMissingDimensions = dict([(i, i) for i in range(dimensions-53)])
         unitVector = RandomGaussianUnitVector(dimensions=dimensions, mu=0, sigma=1)
         vectorPermutations = VectorPermutation.getPermutations(signatureLength, dimensions, unitVector)
         permutatedUnitVectors = [unitVector.getPermutedVector(r) for r in vectorPermutations]
         documentVector = VectorGenerator.getRandomGaussianUnitVector(dimension=dimensions, mu=0, sigma=1)
         documentWithSignatureByVectors=Document(1, documentVector)
         documentWithSignatureByVectorPermutations=Document(2, documentVector)
-        documentWithSignatureByVectors.setSignatureUsingVectors(permutatedUnitVectors)
-        documentWithSignatureByVectorPermutations.setSignatureUsingVectorPermutations(unitVector, vectorPermutations)
+        documentWithSignatureByVectors.setSignatureUsingVectors(permutatedUnitVectors, dimensionToPhraseMap)
+        documentWithSignatureByVectorPermutations.setSignatureUsingVectorPermutations(unitVector, vectorPermutations, dimensionToPhraseMap)
         self.assertEqual(documentWithSignatureByVectors.signature, documentWithSignatureByVectorPermutations.signature)
+        documentWithSignatureByVectors.setSignatureUsingVectors(permutatedUnitVectors, dimensionToPhraseMapWithMissingDimensions)
+        documentWithSignatureByVectorPermutations.setSignatureUsingVectorPermutations(unitVector, vectorPermutations, dimensionToPhraseMapWithMissingDimensions)
+        self.assertEqual(documentWithSignatureByVectors.signature, documentWithSignatureByVectorPermutations.signature)
+    def test_setSignatureUsingVectors(self):
+        dimensionToPhraseMap = {1: 'a', 2: 'b'}
+        documentWithDimensionsInVector = Document(1, {'a':1, 'b':4})
+        documentWithDimensionsNotInVector = Document(1, {'a':1, 'c':4})
+        vectors = [ Vector({1: 3/5., 2: -4/5.}), Vector({1:-5/13., 2: 12/13.})]
+        documentWithDimensionsInVector.setSignatureUsingVectors(vectors, dimensionToPhraseMap)
+        documentWithDimensionsNotInVector.setSignatureUsingVectors(vectors, dimensionToPhraseMap)
+        self.assertEqual(Signature('01'), documentWithDimensionsInVector.signature)
+        self.assertEqual(Signature('10'), documentWithDimensionsNotInVector.signature)
+        
         
 class SignaturePermutationTests(unittest.TestCase):
     def setUp(self):
         self.dimension, self.signatureLength = 50, 23
+        self.dimensionToPhraseMap = dict([(i, i) for i in range(self.dimension)])
         self.unitRandomVectors = [VectorGenerator.getRandomGaussianUnitVector(dimension=self.dimension, mu=0, sigma=1) for i in range(self.signatureLength)]
         self.doc1=Document(1, VectorGenerator.getRandomGaussianUnitVector(dimension=self.dimension, mu=0, sigma=1))
         self.doc2=Document(2, VectorGenerator.getRandomGaussianUnitVector(dimension=self.dimension, mu=0, sigma=1))
-        self.doc1.setSignatureUsingVectors(self.unitRandomVectors); self.doc2.setSignatureUsingVectors(self.unitRandomVectors)
+        self.doc1.setSignatureUsingVectors(self.unitRandomVectors, self.dimensionToPhraseMap); self.doc2.setSignatureUsingVectors(self.unitRandomVectors, self.dimensionToPhraseMap)
         self.pm = SignaturePermutation(signatureLength=self.signatureLength)
         self.pm.addDocument(self.doc1)
         self.pm.addDocument(self.doc2)
     def test_addDocument_newKey(self):
         doc1=Document(1, VectorGenerator.getRandomGaussianUnitVector(dimension=self.dimension, mu=0, sigma=1))
-        doc1.setSignatureUsingVectors(self.unitRandomVectors)
+        doc1.setSignatureUsingVectors(self.unitRandomVectors, self.dimensionToPhraseMap)
         pm = SignaturePermutation(signatureLength=self.signatureLength)
         pm.addDocument(doc1)
         self.assertEqual(pm.signatureTrie[doc1.signature.permutate(pm).to01()], set([1]))
