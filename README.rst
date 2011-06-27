@@ -19,7 +19,7 @@ Applications currently using Streaming LSH:
 
 * `HD Streams Clustering <https://github.com/kykamath/hd_streams_clustering>`_
 
-Note: If you want your application listed here. Contact the author.
+*Note*: If you want your application listed here, contact the author.
 
 References
 ==============
