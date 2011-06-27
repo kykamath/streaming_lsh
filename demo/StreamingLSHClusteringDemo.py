@@ -23,18 +23,6 @@ from classes import Document
 from library.vector import Vector
 from library.clustering import EvaluationMetrics
 
-#wordToDimensionMap = {}
-#def createDocumentFromLine(docId, line):
-#    global wordToDimensionMap
-#    vector = Vector()
-#    words = line.split()
-#    for word in words[1:]:
-#        if word not in wordToDimensionMap: wordToDimensionMap[word]=len(wordToDimensionMap)
-#        wordDimension = wordToDimensionMap[word]
-#        if wordDimension not in vector: vector[wordDimension]=1
-#        else: vector[wordDimension]+=1
-#    return Document(docId, vector, clusterId=words[0])
-
 def createDocumentFromLine(docId, line):
     vector, words = Vector(), line.split()
     for word in words[1:]:

@@ -60,18 +60,17 @@ class Document(Vector):
     def __init__(self, docId, vector, clusterId = None):
         super(Document, self).__init__(vector)
         self.docId, self.clusterId = docId, clusterId
-#    def setSignatureUsingVectors(self, vectors): self.signature = Signature(self.dot(v)>=0 for v in vectors)
-    def _getVectorMappedToDimension(self, vector, dimensionToPhraseMap): 
+    def _getVectorMappedToDimension(self, vector, phraseTextAndDimensionMap): 
         mappedVector = Vector()
-        for dimension in vector: 
-            if dimension in dimensionToPhraseMap: mappedVector[dimension] = self.get(dimensionToPhraseMap[dimension], 0)
-            else: mappedVector[dimension] = 0
+        phraseToDimensionMap = phraseTextAndDimensionMap.getMap(TwoWayMap.MAP_FORWARD)
+        for phrase in self:
+            if phrase in phraseToDimensionMap: mappedVector[phraseToDimensionMap[phrase]] = self[phrase]
         return mappedVector
-    def setSignatureUsingVectors(self, vectors, dimensionToPhraseMap): 
-        vectorMappedToDimension = self._getVectorMappedToDimension(vectors[0], dimensionToPhraseMap)
-        self.signature = Signature(vectorMappedToDimension.dot(v)>=0 for v in vectors)
-    def setSignatureUsingVectorPermutations(self, vector, vectorPermutations, dimensionToPhraseMap):
-        vectorMappedToDimension = self._getVectorMappedToDimension(vector, dimensionToPhraseMap)
+    def setSignatureUsingVectors(self, vectors, phraseTextAndDimensionMap): 
+        vectorMappedToDimension = self._getVectorMappedToDimension(vectors[0], phraseTextAndDimensionMap)
+        self.signature = Signature(v.dotWithSmallerVectorWithSubsetDimensions(vectorMappedToDimension)>=0 for v in vectors)
+    def setSignatureUsingVectorPermutations(self, vector, vectorPermutations, phraseTextAndDimensionMap):
+        vectorMappedToDimension = self._getVectorMappedToDimension(vector, phraseTextAndDimensionMap)
         self.signature = Signature('')
         for vp in vectorPermutations:
             total = sum(vectorMappedToDimension[dimension]*vector[vp.applyFunction(dimension)] for dimension in vectorMappedToDimension)

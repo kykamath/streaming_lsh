@@ -21,7 +21,7 @@ class StreamingLSHClustering(object):
     
     def getClusterForDocument(self, document):
         UtilityMethods.updatePhraseTextAndDimensionsMap(document, self.phraseTextAndDimensionMap, **self.clustering_settings)
-        document.setSignatureUsingVectorPermutations(self.unitVector, self.vectorPermutations, self.phraseTextAndDimensionMap.getMap(TwoWayMap.MAP_REVERSE))
+        document.setSignatureUsingVectorPermutations(self.unitVector, self.vectorPermutations, self.phraseTextAndDimensionMap)
         predictedCluster = None
         possibleNearestClusters = reduce(lambda x,y:x.union(y), (permutation.getNearestDocuments(document) for permutation in self.signaturePermutations), set())
         if possibleNearestClusters: predictedCluster = max(((clusterId, self.clusters[clusterId].cosineSimilarity(document)) for clusterId in possibleNearestClusters), key=itemgetter(1))
@@ -33,10 +33,10 @@ class StreamingLSHClustering(object):
             self.clusters[predictedCluster].addDocument(document)
         else:
             newCluster = Cluster(document)
-            newCluster.setSignatureUsingVectorPermutations(self.unitVector, self.vectorPermutations, self.phraseTextAndDimensionMap.getMap(TwoWayMap.MAP_REVERSE))
+            newCluster.setSignatureUsingVectorPermutations(self.unitVector, self.vectorPermutations, self.phraseTextAndDimensionMap)
             for permutation in self.signaturePermutations: permutation.addDocument(newCluster)
             self.clusters[newCluster.clusterId] = newCluster
     
     def regenerateSignatureForClusters(self):
-        for cluster in self.clusters.itervalues(): cluster.setSignatureUsingVectorPermutations(self.unitVector, self.vectorPermutations, self.phraseTextAndDimensionMap.getMap(TwoWayMap.MAP_REVERSE))
+        for cluster in self.clusters.itervalues(): cluster.setSignatureUsingVectorPermutations(self.unitVector, self.vectorPermutations, self.phraseTextAndDimensionMap)
                 
