@@ -3,6 +3,9 @@ Created on Jun 22, 2011
 
 @author: kykamath
 '''
+
+UNIQUE_LIBRARY_KEY = 'fFUXAcrI0::ilab::FzWTHXfIsAr'
+
 class Settings(dict):
     '''
     This class was obtained from Jeff McGee.
@@ -19,8 +22,11 @@ class GeneralMethods:
         if currentTime-GeneralMethods.callMethodEveryIntervalVariable>=interval:
             method(**kwargs)
             GeneralMethods.callMethodEveryIntervalVariable=currentTime
-            
+
 class TwoWayMap:
+    '''
+    A data strucutre that enables 2 way mapping.
+    '''
     MAP_FORWARD = 1
     MAP_REVERSE = -1
     def __init__(self):
