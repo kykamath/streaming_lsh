@@ -137,11 +137,14 @@ class ClusterTests(unittest.TestCase):
         self.cluster1.addDocument(doc1)
         self.cluster1.addDocument(doc2)
         self.assertEqual([doc1, doc2], list(self.cluster1.iterateDocumentsInCluster()))
+        self.assertEqual(2, self.cluster1.length)
         # Test removal of document from cluster, if the document is added to a different cluster.
         self.cluster2.addDocument(doc2)
         self.assertEqual([doc1], list(self.cluster1.iterateDocumentsInCluster()))
+        self.assertEqual(1, self.cluster1.length)
         self.assertEqual(1, len(self.cluster1.documentsInCluster))
         self.assertEqual([doc2], list(self.cluster2.iterateDocumentsInCluster()))
+        self.assertEqual(1, self.cluster2.length)
         
 if __name__ == '__main__':
     unittest.main()

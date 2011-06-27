@@ -86,6 +86,8 @@ class Cluster(Document):
             if self.documentsInCluster[doc].clusterId == self.clusterId: yield self.documentsInCluster[doc]
             else: documentsToDelete.append(doc)
         for doc in documentsToDelete: del self.documentsInCluster[doc]
+    @property
+    def length(self): return len(list(self.iterateDocumentsInCluster()))
 
 class VectorPermutation(Permutation):
     '''
