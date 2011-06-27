@@ -6,7 +6,7 @@ Created on Jun 23, 2011
 import unittest, sys
 sys.path.append('../')
 from datetime import datetime, timedelta
-from classes import GeneralMethods
+from classes import GeneralMethods, TwoWayDict
 
 test_time = datetime.now()
 
@@ -19,5 +19,16 @@ class GeneralMethodsTests(unittest.TestCase):
         while currentTime<=final_time:
             GeneralMethods.callMethodEveryInterval(method, timedelta(minutes=15), currentTime, arg1=15, arg2=currentTime)
             currentTime+=timedelta(minutes=1)
+
+class TwoWayDictTests(unittest.TestCase):
+    def test_basicOperation(self):
+        twoWayDict = TwoWayDict()
+        self.assertRaises(TypeError, twoWayDict.set, (5, 1, 2))
+        twoWayDict.set(TwoWayDict.MAP_FORWARD, 'a', 'A')
+        twoWayDict.set(TwoWayDict.MAP_REVERSE, 'B', 'b')
+        self.assertEqual('A', twoWayDict.get(TwoWayDict.MAP_FORWARD, 'a'))
+        self.assertEqual('a', twoWayDict.get(TwoWayDict.MAP_REVERSE, 'A'))
+        self.assertEqual('B', twoWayDict.get(TwoWayDict.MAP_FORWARD, 'b'))
+        self.assertEqual('b', twoWayDict.get(TwoWayDict.MAP_REVERSE, 'B'))
 if __name__ == '__main__':
     unittest.main()
