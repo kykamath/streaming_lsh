@@ -14,10 +14,9 @@ Created on Jun 16, 2011
 
 @author: kykamath
 '''
-import sys
-from streaming_lsh_clustering import StreamingLSHClustering
+import sys, numpy
 sys.path.append('../')
-import numpy
+from streaming_lsh_clustering import StreamingLSHClustering
 from library.file_io import FileIO 
 from classes import Document
 from library.vector import Vector
