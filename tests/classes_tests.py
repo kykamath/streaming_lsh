@@ -6,7 +6,7 @@ Created on Jun 23, 2011
 import unittest, sys
 sys.path.append('../')
 from datetime import datetime, timedelta
-from classes import GeneralMethods, TwoWayMap, PatternMap, UNIQUE_LIBRARY_KEY
+from classes import GeneralMethods, TwoWayMap, UNIQUE_LIBRARY_KEY
 
 test_time = datetime.now()
 
@@ -20,12 +20,12 @@ class GeneralMethodsTests(unittest.TestCase):
             GeneralMethods.callMethodEveryInterval(method, timedelta(minutes=15), currentTime, arg1=15, arg2=currentTime)
             currentTime+=timedelta(minutes=1)
 
-class PatternMapTests(unittest.TestCase):
-    def test_basicOperation(self):
-        pm = PatternMap()
-        pm[UNIQUE_LIBRARY_KEY+str(10)]=12
-        pm.setdefault(UNIQUE_LIBRARY_KEY+str(12),12)
-        self.assertEqual({'::ilab::12': 12, '::ilab::10': 12}, pm)
+#class PatternMapTests(unittest.TestCase):
+#    def test_basicOperation(self):
+#        pm = PatternMap()
+#        pm[UNIQUE_LIBRARY_KEY+str(10)]=12
+#        pm.setdefault(UNIQUE_LIBRARY_KEY+str(12),12)
+#        self.assertEqual({'12': 12, '10': 12}, pm)
         
 class TwoWayDictTests(unittest.TestCase):
     def setUp(self):
@@ -38,12 +38,12 @@ class TwoWayDictTests(unittest.TestCase):
         self.assertEqual('a', self.twoWayMap.get(TwoWayMap.MAP_REVERSE, 'A'))
         self.assertEqual('B', self.twoWayMap.get(TwoWayMap.MAP_FORWARD, 'b'))
         self.assertEqual('b', self.twoWayMap.get(TwoWayMap.MAP_REVERSE, 'B'))
-        self.assertEqual({'::ilab::b': 'B', '::ilab::a': 'A'}, self.twoWayMap.getMap(self.twoWayMap.MAP_FORWARD))
-        self.assertEqual({'::ilab::B': 'b', '::ilab::A': 'a'}, self.twoWayMap.getMap(self.twoWayMap.MAP_REVERSE))
+        self.assertEqual({'b': 'B', 'a': 'A'}, self.twoWayMap.getMap(self.twoWayMap.MAP_FORWARD))
+        self.assertEqual({'B': 'b', 'A': 'a'}, self.twoWayMap.getMap(self.twoWayMap.MAP_REVERSE))
     def test_delete(self):
         self.twoWayMap.remove(TwoWayMap.MAP_FORWARD, 'a')
-        self.assertEqual({'::ilab::b': 'B'}, self.twoWayMap.getMap(self.twoWayMap.MAP_FORWARD))
-        self.assertEqual({'::ilab::B': 'b'}, self.twoWayMap.getMap(self.twoWayMap.MAP_REVERSE))
+        self.assertEqual({'b': 'B'}, self.twoWayMap.getMap(self.twoWayMap.MAP_FORWARD))
+        self.assertEqual({'B': 'b'}, self.twoWayMap.getMap(self.twoWayMap.MAP_REVERSE))
     def test_length(self):
         self.assertEqual(2, len(self.twoWayMap))
         self.twoWayMap.set(TwoWayMap.MAP_REVERSE, 'C', 'c')
