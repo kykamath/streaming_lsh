@@ -25,6 +25,12 @@ def isPrime(number):
     '''
     return number in filter(lambda num: (num % numpy.arange(2,1+int(math.sqrt(num)))).all(), range(2,number+1))
 
+def getLargestPrimeLesserThan(number):
+    '''
+    For details see isPrime description.
+    '''
+    return filter(lambda num: (num % numpy.arange(2,1+int(math.sqrt(num)))).all(), range(2,number+1))[-1]
+
 class ModularArithmetic:
     @staticmethod
     def gcd(numA, numB):
