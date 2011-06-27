@@ -43,25 +43,19 @@ class TwoWayMap:
     '''
     MAP_FORWARD = 1
     MAP_REVERSE = -1
-    def __init__(self):
-        self.data = {TwoWayMap.MAP_FORWARD: PatternMap(), TwoWayMap.MAP_REVERSE: PatternMap()}
+    def __init__(self): self.data = {TwoWayMap.MAP_FORWARD: PatternMap(), TwoWayMap.MAP_REVERSE: PatternMap()}
     @staticmethod
-    def validMappingDirection(mappingDirection):
-        if mappingDirection not in [TwoWayMap.MAP_FORWARD, TwoWayMap.MAP_REVERSE]: raise KeyError('Incorrect mapping direction.')
-        return True
+    def keyTransform(key): return UNIQUE_LIBRARY_KEY+str(key)
     def set(self, mappingDirection, key, value): 
-        if TwoWayMap.validMappingDirection(mappingDirection):
-            self.data[mappingDirection][UNIQUE_LIBRARY_KEY+str(key)]=value
-            if mappingDirection==TwoWayMap.MAP_FORWARD: self.data[TwoWayMap.MAP_REVERSE][UNIQUE_LIBRARY_KEY+str(value)]=key
-            else: self.data[TwoWayMap.MAP_FORWARD][UNIQUE_LIBRARY_KEY+str(value)]=key
-    def get(self, mappingDirection, key): 
-        if TwoWayMap.validMappingDirection(mappingDirection): return self.data[mappingDirection][UNIQUE_LIBRARY_KEY+str(key)]
+        self.data[mappingDirection][TwoWayMap.keyTransform(key)]=value
+        if mappingDirection==TwoWayMap.MAP_FORWARD: self.data[TwoWayMap.MAP_REVERSE][TwoWayMap.keyTransform(value)]=key
+        else: self.data[TwoWayMap.MAP_FORWARD][TwoWayMap.keyTransform(value)]=key
+    def get(self, mappingDirection, key): return self.data[mappingDirection][TwoWayMap.keyTransform(key)]
     def remove(self, mappingDirection, key):
-        if TwoWayMap.validMappingDirection(mappingDirection):
-            value = self.data[mappingDirection][UNIQUE_LIBRARY_KEY+str(key)]
-            del self.data[mappingDirection][UNIQUE_LIBRARY_KEY+str(key)]
-            if mappingDirection==TwoWayMap.MAP_FORWARD: del self.data[TwoWayMap.MAP_REVERSE][UNIQUE_LIBRARY_KEY+str(value)]
-            else: del self.data[TwoWayMap.MAP_FORWARD][UNIQUE_LIBRARY_KEY+str(value)]
-    def getMap(self, mappingDirection):
-        if TwoWayMap.validMappingDirection(mappingDirection): return self.data[mappingDirection]
+        value = self.data[mappingDirection][TwoWayMap.keyTransform(key)]
+        del self.data[mappingDirection][TwoWayMap.keyTransform(key)]
+        if mappingDirection==TwoWayMap.MAP_FORWARD: del self.data[TwoWayMap.MAP_REVERSE][TwoWayMap.keyTransform(value)]
+        else: del self.data[TwoWayMap.MAP_FORWARD][TwoWayMap.keyTransform(value)]
+    def getMap(self, mappingDirection): return self.data[mappingDirection]
+    def contains(self, mappingDirection, key): return  TwoWayMap.keyTransform(key) in self.data[mappingDirection]
     def __len__(self): return len(self.data[TwoWayMap.MAP_FORWARD])
