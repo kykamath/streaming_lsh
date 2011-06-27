@@ -28,17 +28,21 @@ class PatternMapTests(unittest.TestCase):
         self.assertEqual({'::ilab::12': 12, '::ilab::10': 12}, pm)
         
 class TwoWayDictTests(unittest.TestCase):
+    def setUp(self):
+        self.twoWayMap = TwoWayMap()
+        self.assertRaises(TypeError, self.twoWayMap.set, (5, 1, 2))
+        self.twoWayMap.set(TwoWayMap.MAP_FORWARD, 'a', 'A')
+        self.twoWayMap.set(TwoWayMap.MAP_REVERSE, 'B', 'b')
     def test_basicOperation(self):
-        twoWayMap = TwoWayMap()
-        self.assertRaises(TypeError, twoWayMap.set, (5, 1, 2))
-        twoWayMap.set(TwoWayMap.MAP_FORWARD, 'a', 'A')
-        twoWayMap.set(TwoWayMap.MAP_REVERSE, 'B', 'b')
-        self.assertEqual('A', twoWayMap.get(TwoWayMap.MAP_FORWARD, 'a'))
-        self.assertEqual('a', twoWayMap.get(TwoWayMap.MAP_REVERSE, 'A'))
-        self.assertEqual('B', twoWayMap.get(TwoWayMap.MAP_FORWARD, 'b'))
-        self.assertEqual('b', twoWayMap.get(TwoWayMap.MAP_REVERSE, 'B'))
-        self.assertEqual({'::ilab::b': 'B', '::ilab::a': 'A'}, twoWayMap.getMap(twoWayMap.MAP_FORWARD))
-        self.assertEqual({'::ilab::B': 'b', '::ilab::A': 'a'}, twoWayMap.getMap(twoWayMap.MAP_REVERSE))
-        
+        self.assertEqual('A', self.twoWayMap.get(TwoWayMap.MAP_FORWARD, 'a'))
+        self.assertEqual('a', self.twoWayMap.get(TwoWayMap.MAP_REVERSE, 'A'))
+        self.assertEqual('B', self.twoWayMap.get(TwoWayMap.MAP_FORWARD, 'b'))
+        self.assertEqual('b', self.twoWayMap.get(TwoWayMap.MAP_REVERSE, 'B'))
+        self.assertEqual({'::ilab::b': 'B', '::ilab::a': 'A'}, self.twoWayMap.getMap(self.twoWayMap.MAP_FORWARD))
+        self.assertEqual({'::ilab::B': 'b', '::ilab::A': 'a'}, self.twoWayMap.getMap(self.twoWayMap.MAP_REVERSE))
+    def test_delete(self):
+        self.twoWayMap.remove(TwoWayMap.MAP_FORWARD, 'a')
+        self.assertEqual({'::ilab::b': 'B'}, self.twoWayMap.getMap(self.twoWayMap.MAP_FORWARD))
+        self.assertEqual({'::ilab::B': 'b'}, self.twoWayMap.getMap(self.twoWayMap.MAP_REVERSE))
 if __name__ == '__main__':
     unittest.main()
