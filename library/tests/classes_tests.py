@@ -32,5 +32,6 @@ class TwoWayDictTests(unittest.TestCase):
         self.assertEqual('b', twoWayMap.get(TwoWayMap.MAP_REVERSE, 'B'))
         self.assertEqual({'a':'A', 'b':'B'}, twoWayMap.getMap(twoWayMap.MAP_FORWARD))
         self.assertEqual({'A':'a', 'B':'b'}, twoWayMap.getMap(twoWayMap.MAP_REVERSE))
+        
 if __name__ == '__main__':
     unittest.main()
