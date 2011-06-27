@@ -28,10 +28,9 @@ class Vector(dict):
             else: diffVector[k]=v
         return diffVector
     
-    def dot(self, otherVector):
-        total = 0
-        for k in set(self.keys()).union(otherVector.keys()): total+=self.get(k,0)*otherVector.get(k,0)
-        return reduce(lambda total, k: total+(self.get(k,0)*otherVector.get(k,0)), set(self.keys()).union(otherVector.keys()),0)
+    def dot(self, otherVector): return reduce(lambda total, k: total+(self.get(k,0)*otherVector.get(k,0)), set(self.keys()).union(otherVector.keys()),0)
+    
+    def dotWithSmallerVectorWithSubsetDimensions(self, smallerVector): return reduce(lambda total, k: total+(self[k]*smallerVector[k]), smallerVector,0)
     
     def divideByScalar(self, scalar):
         for k in self.keys(): self[k]/=scalar
