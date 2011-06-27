@@ -13,6 +13,13 @@ Dependancies
 * `bitarray <http://pypi.python.org/pypi/bitarray>`_
 * `Biopython <http://biopython.org/>`_
 
+Applications Using Streaming LSH
+================================
+Applications currently using Streaming LSH:
+* `HD Streams Clustering <https://github.com/kykamath/hd_streams_clustering>`_
+
+Note: If you want your application listed here. Contact the author.
+
 References
 ==============
 * Aristides Gionis, Piotr Indyk, and Rajeev Motwani. 1999. `Similarity Search in High Dimensions via Hashing. <http://portal.acm.org/citation.cfm?id=671516>`_ In Proceedings of the 25th International Conference on Very Large Data Bases (VLDB '99), Malcolm P. Atkinson, Maria E. Orlowska, Patrick Valduriez, Stanley B. Zdonik, and Michael L. Brodie (Eds.). Morgan Kaufmann Publishers Inc., San Francisco, CA, USA, 518-529.
