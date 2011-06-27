@@ -56,5 +56,11 @@ class TwoWayMap:
             else: self.data[TwoWayMap.MAP_FORWARD][UNIQUE_LIBRARY_KEY+str(value)]=key
     def get(self, mappingDirection, key): 
         if TwoWayMap.validMappingDirection(mappingDirection): return self.data[mappingDirection][UNIQUE_LIBRARY_KEY+str(key)]
+    def remove(self, mappingDirection, key):
+        if TwoWayMap.validMappingDirection(mappingDirection):
+            value = self.data[mappingDirection][UNIQUE_LIBRARY_KEY+str(key)]
+            del self.data[mappingDirection][UNIQUE_LIBRARY_KEY+str(key)]
+            if mappingDirection==TwoWayMap.MAP_FORWARD: del self.data[TwoWayMap.MAP_REVERSE][UNIQUE_LIBRARY_KEY+str(value)]
+            else: del self.data[TwoWayMap.MAP_FORWARD][UNIQUE_LIBRARY_KEY+str(value)]
     def getMap(self, mappingDirection):
         if TwoWayMap.validMappingDirection(mappingDirection): return self.data[mappingDirection]
