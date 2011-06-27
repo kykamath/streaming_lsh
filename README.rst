@@ -15,7 +15,7 @@ Dependancies
 
 Applications Using Streaming LSH
 ================================
-Applications currently using Streaming LSH:
+Applications currently using Streaming LSH
 * `HD Streams Clustering <https://github.com/kykamath/hd_streams_clustering>`_
 
 Note: If you want your application listed here. Contact the author.
