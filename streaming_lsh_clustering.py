@@ -31,4 +31,7 @@ class StreamingLSHClustering(object):
             newCluster.setSignatureUsingVectorPermutations(self.unitVector, self.vectorPermutations)
             for permutation in self.signaturePermutations: permutation.addDocument(newCluster)
             self.clusters[newCluster.clusterId] = newCluster
+    
+    def regenerateSignatureForClusters(self):
+        for cluster in self.clusters.itervalues(): cluster.setSignatureUsingVectorPermutations(self.unitVector, self.vectorPermutations)
                 
