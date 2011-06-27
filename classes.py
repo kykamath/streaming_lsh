@@ -64,3 +64,4 @@ class TwoWayMap:
             else: del self.data[TwoWayMap.MAP_FORWARD][UNIQUE_LIBRARY_KEY+str(value)]
     def getMap(self, mappingDirection):
         if TwoWayMap.validMappingDirection(mappingDirection): return self.data[mappingDirection]
+    def __len__(self): return len(self.data[TwoWayMap.MAP_FORWARD])
