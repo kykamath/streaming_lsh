@@ -6,7 +6,7 @@ Created on Jun 23, 2011
 import unittest, sys
 sys.path.append('../')
 from datetime import datetime, timedelta
-from classes import GeneralMethods, TwoWayMap
+from classes import GeneralMethods, TwoWayMap, PatternMap, UNIQUE_LIBRARY_KEY
 
 test_time = datetime.now()
 
@@ -20,6 +20,13 @@ class GeneralMethodsTests(unittest.TestCase):
             GeneralMethods.callMethodEveryInterval(method, timedelta(minutes=15), currentTime, arg1=15, arg2=currentTime)
             currentTime+=timedelta(minutes=1)
 
+class PatternMapTests(unittest.TestCase):
+    def test_basicOperation(self):
+        pm = PatternMap()
+        pm[UNIQUE_LIBRARY_KEY+str(10)]=12
+        pm.setdefault(UNIQUE_LIBRARY_KEY+str(12),12)
+        self.assertEqual({'::ilab::12': 12, '::ilab::10': 12}, pm)
+        
 class TwoWayDictTests(unittest.TestCase):
     def test_basicOperation(self):
         twoWayMap = TwoWayMap()
@@ -30,8 +37,8 @@ class TwoWayDictTests(unittest.TestCase):
         self.assertEqual('a', twoWayMap.get(TwoWayMap.MAP_REVERSE, 'A'))
         self.assertEqual('B', twoWayMap.get(TwoWayMap.MAP_FORWARD, 'b'))
         self.assertEqual('b', twoWayMap.get(TwoWayMap.MAP_REVERSE, 'B'))
-        self.assertEqual({'a':'A', 'b':'B'}, twoWayMap.getMap(twoWayMap.MAP_FORWARD))
-        self.assertEqual({'A':'a', 'B':'b'}, twoWayMap.getMap(twoWayMap.MAP_REVERSE))
+        self.assertEqual({'::ilab::b': 'B', '::ilab::a': 'A'}, twoWayMap.getMap(twoWayMap.MAP_FORWARD))
+        self.assertEqual({'::ilab::B': 'b', '::ilab::A': 'a'}, twoWayMap.getMap(twoWayMap.MAP_REVERSE))
         
 if __name__ == '__main__':
     unittest.main()
