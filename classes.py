@@ -118,7 +118,10 @@ class Cluster(Document):
     def length(self): return len(list(self.iterateDocumentsInCluster()))
     @staticmethod
     def iterateByAttribute(clusters, attribute): 
-        for cluster in clusters: yield (cluster, cluster.__dict__[attribute])
+        if attribute!='length':
+            for cluster in clusters: yield (cluster, cluster.__dict__[attribute])
+        else:
+            for cluster in clusters: yield (cluster, cluster.length)
     @staticmethod
     def filterClustersByAttribute(clusters, attribute, threshold):
         for cluster, value in Cluster.iterateByAttribute(clusters, attribute):
