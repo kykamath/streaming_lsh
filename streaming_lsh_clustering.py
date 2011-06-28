@@ -27,13 +27,16 @@ class StreamingLSHClustering(object):
     
     def getClusterAndUpdateExistingClusters(self, document):
         predictedCluster = self.getClusterForDocument(document)
-        if predictedCluster!=None:
-            self.clusters[predictedCluster].addDocument(document)
+        if predictedCluster!=None: self.clusters[predictedCluster].addDocument(document)
         else:
             newCluster = Cluster(document)
             newCluster.setSignatureUsingVectorPermutations(self.unitVector, self.vectorPermutations, self.phraseTextAndDimensionMap)
             for permutation in self.signaturePermutations: permutation.addDocument(newCluster)
             self.clusters[newCluster.clusterId] = newCluster
     
-    def regenerateSignatureForClusters(self):
-        for cluster in self.clusters.itervalues(): cluster.setSignatureUsingVectorPermutations(self.unitVector, self.vectorPermutations, self.phraseTextAndDimensionMap)
+    def regenerateSignatureForClustersAndUpdateSignaturePermutationTries(self):
+        for permutation in self.signaturePermutations: permutation.resetSignatureTrie()
+        for cluster in self.clusters.itervalues(): 
+            cluster.setSignatureUsingVectorPermutations(self.unitVector, self.vectorPermutations, self.phraseTextAndDimensionMap)
+            for permutation in self.signaturePermutations: permutation.addDocument(cluster)
+        
