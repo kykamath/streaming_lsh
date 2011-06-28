@@ -20,13 +20,6 @@ class GeneralMethodsTests(unittest.TestCase):
             GeneralMethods.callMethodEveryInterval(method, timedelta(minutes=15), currentTime, arg1=15, arg2=currentTime)
             currentTime+=timedelta(minutes=1)
 
-#class PatternMapTests(unittest.TestCase):
-#    def test_basicOperation(self):
-#        pm = PatternMap()
-#        pm[UNIQUE_LIBRARY_KEY+str(10)]=12
-#        pm.setdefault(UNIQUE_LIBRARY_KEY+str(12),12)
-#        self.assertEqual({'12': 12, '10': 12}, pm)
-        
 class TwoWayDictTests(unittest.TestCase):
     def setUp(self):
         self.twoWayMap = TwoWayMap()
