@@ -16,8 +16,6 @@ class StreamingLSHClustering(object):
         self.signaturePermutations = [SignaturePermutation(clustering_settings['signature_length']) for i in range(clustering_settings['number_of_permutations'])]
         self.phraseTextAndDimensionMap, self.clusters = TwoWayMap(), {}
         self.clustering_settings = clustering_settings
-        print clustering_settings['signature_length'], clustering_settings['dimensions'], clustering_settings['number_of_permutations']
-        exit()
     
     def getClusterForDocument(self, document):
         UtilityMethods.updatePhraseTextAndDimensionsMap(document, self.phraseTextAndDimensionMap, **self.clustering_settings)
