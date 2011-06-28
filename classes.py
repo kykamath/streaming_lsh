@@ -50,8 +50,11 @@ class SignaturePermutation(Permutation):
         if self.signatureTrie.has_key(permutedDocumentSignatureKey): self.signatureTrie[permutedDocumentSignatureKey].add(document.docId)
         else: self.signatureTrie[permutedDocumentSignatureKey] = set([document.docId])
         self.isEmpty=False
+    def removeDocument(self, document):
+        permutedDocumentSignatureKey = document.signature.permutate(self).to01()
+        self.signatureTrie[permutedDocumentSignatureKey].remove(document.docId)
+        if not self.signatureTrie[permutedDocumentSignatureKey]: del self.signatureTrie[permutedDocumentSignatureKey]
     def getNearestDocuments(self, document):
-#        if len(self.signatureTrie)==0: return set()
         if self.isEmpty: return set()
         permutedDocumentSignature = document.signature.permutate(self)
         nearestSignatureKey=SignatureTrie.getNearestSignatureKey(self.signatureTrie, permutedDocumentSignature)

@@ -131,7 +131,16 @@ class SignaturePermutationTests(unittest.TestCase):
     def test_getNearestDocument_emptyTrie(self):
         permutationWithEmptyTrie = SignaturePermutation(signatureLength=self.signatureLength)
         self.assertEqual(permutationWithEmptyTrie.getNearestDocuments(self.doc1), set())
-
+    def test_removeDocument_documents(self):
+        newDocModifiedWithExistingSignature = Document(3, VectorGenerator.getRandomGaussianUnitVector(dimension=self.dimension, mu=0, sigma=1))
+        newDocModifiedWithExistingSignature.signature = Signature(self.doc1.signature.to01())
+        self.pm.addDocument(newDocModifiedWithExistingSignature)
+        self.assertEqual(self.pm.signatureTrie[self.doc1.signature.permutate(self.pm).to01()], set([1, 3]))
+        self.pm.removeDocument(newDocModifiedWithExistingSignature)
+        self.assertEqual(self.pm.signatureTrie[self.doc1.signature.permutate(self.pm).to01()], set([1]))
+        self.pm.removeDocument(self.doc1)
+        self.assertEqual(None, self.pm.signatureTrie.get(self.doc1.signature.permutate(self.pm).to01()))
+        
 class RandomGaussianUnitVectorTests(unittest.TestCase):
     def setUp(self): 
         self.vector = RandomGaussianUnitVector(dimensions=5, mu=0, sigma=1)
