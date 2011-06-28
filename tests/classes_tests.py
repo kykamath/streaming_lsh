@@ -47,7 +47,7 @@ class SignatureTrieTests(unittest.TestCase):
         self.tr['1000']=12;self.tr['1011']=12; self.tr['1010']=12
     def test_getNearestSignature_exactKey(self): self.assertEquals(SignatureTrie.getNearestSignatureKey(self.tr, Signature('1000')), '1000')
     def test_getNearestSignature_nearbyKey(self): self.assertEquals(SignatureTrie.getNearestSignatureKey(self.tr, Signature('1100')), '1000')
-
+        
 class PermutationTests(unittest.TestCase):
     def setUp(self): self.pm = Permutation(maximumValue=13)
     def test_exceptionForMaxValueNotPrime(self): self.assertRaises(Exception, Permutation, 10)

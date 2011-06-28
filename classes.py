@@ -9,6 +9,7 @@ from Bio import trie
 from library.vector import VectorGenerator, Vector
 from library.math_modified import isPrime
 from library.classes import TwoWayMap
+from collections import defaultdict
 
 class UtilityMethods:
     @staticmethod
@@ -114,6 +115,11 @@ class Cluster(Document):
         for doc in documentsToDelete: del self.documentsInCluster[doc]
     @property
     def length(self): return len(list(self.iterateDocumentsInCluster()))
+    @staticmethod
+    def getDistribution(clusters):
+        clustersLengthDistribution = defaultdict(int)
+        for cluster in clusters: clustersLengthDistribution[len(cluster)]+=1
+        return clustersLengthDistribution
 
 class VectorPermutation(Permutation):
     '''
