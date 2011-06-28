@@ -4,9 +4,9 @@ Created on Jun 14, 2011
 @author: kykamath
 '''
 import sys, unittest
-from library.classes import TwoWayMap
 sys.path.append('../')
 from Bio import trie
+from library.classes import TwoWayMap
 from classes import Signature, SignaturePermutation, SignatureTrie, Document,\
     RandomGaussianUnitVector, Permutation, VectorPermutation, Cluster,\
     UtilityMethods
