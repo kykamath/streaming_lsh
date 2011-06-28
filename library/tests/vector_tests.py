@@ -48,6 +48,10 @@ class VectorTests(unittest.TestCase):
         v1[1]=5;v1[2]=10;
         self.assertEqual(v1.dotWithSmallerVectorWithSubsetDimensions({1:5}),25)
         self.assertEqual(v1.dotWithSmallerVectorWithSubsetDimensions({2:1}), 10)
+    
+    def test_getTopDimensions(self):
+        self.assertEqual({2:3, 1:1},self.v1.getTopDimensions(2))
+        self.assertEqual({2:8},self.v2.getTopDimensions(1))
         
     def test_mod(self):
         v1 = Vector()

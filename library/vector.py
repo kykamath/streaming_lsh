@@ -5,6 +5,7 @@ Created on Jun 14, 2011
 '''
 
 import math, random
+from operator import itemgetter
 
 class Vector(dict):
     
@@ -46,6 +47,8 @@ class Vector(dict):
     
     def cosineSimilarity(self, otherVector):
         return self.getNormalizedVector().dot(otherVector.getNormalizedVector())
+    
+    def getTopDimensions(self, numberOfFeatures): return dict([(k,v) for k,v in sorted(self.iteritems(), key=itemgetter(1), reverse=True)][:numberOfFeatures])
     
     @staticmethod
     def getMeanVector(iterable):
