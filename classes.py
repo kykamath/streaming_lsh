@@ -96,6 +96,8 @@ class RandomGaussianUnitVector(Vector):
 
 class Cluster(Document):
     clusterIdCounter = 0
+    ABOVE_THRESHOLD = 1
+    BELOW_THRESHOLD = -1
     def __init__(self, vector):
         clusterId = 'cluster_%s'%Cluster.clusterIdCounter
         Cluster.clusterIdCounter+=1
@@ -123,9 +125,13 @@ class Cluster(Document):
         else:
             for cluster in clusters: yield (cluster, cluster.length)
     @staticmethod
-    def getClustersAboveThresholdByAttribute(clusters, attribute, threshold):
-        for cluster, value in Cluster.iterateByAttribute(clusters, attribute):
-            if value>=threshold: yield cluster
+    def getClustersByAttributeAndThreshold(clusters, attribute, threshold, direction=1):
+        if direction==Cluster.ABOVE_THRESHOLD:
+            for cluster, value in Cluster.iterateByAttribute(clusters, attribute):
+                if value>=threshold: yield cluster
+        elif direction==Cluster.BELOW_THRESHOLD:
+            for cluster, value in Cluster.iterateByAttribute(clusters, attribute):
+                if value<threshold: yield cluster
 
 class VectorPermutation(Permutation):
     '''

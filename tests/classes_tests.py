@@ -202,8 +202,9 @@ class ClusterTests(unittest.TestCase):
     def test_filterClustersByAttribute(self):
         self.cluster1.addDocument(self.doc1)
         self.cluster2.addDocument(self.doc2)
-        self.assertEqual([self.cluster1, self.cluster2], list(Cluster.getClustersAboveThresholdByAttribute([self.cluster1, self.cluster2], 'vectorWeights', 1)))
-        self.assertEqual([], list(Cluster.getClustersAboveThresholdByAttribute([self.cluster1, self.cluster2], 'vectorWeights', 3)))
+        self.assertEqual([self.cluster1, self.cluster2], list(Cluster.getClustersByAttributeAndThreshold([self.cluster1, self.cluster2], 'vectorWeights', 1)))
+        self.assertEqual([], list(Cluster.getClustersByAttributeAndThreshold([self.cluster1, self.cluster2], 'vectorWeights', 3)))
+        self.assertEqual([self.cluster1, self.cluster2], list(Cluster.getClustersByAttributeAndThreshold([self.cluster1, self.cluster2], 'vectorWeights', 3, Cluster.BELOW_THRESHOLD)))
         
 if __name__ == '__main__':
     unittest.main()
