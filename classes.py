@@ -117,11 +117,8 @@ class Cluster(Document):
     @property
     def length(self): return len(list(self.iterateDocumentsInCluster()))
     @staticmethod
-    def getDistribution(clusters):
-#        clustersLengthDistribution = defaultdict(int)
-#        for cluster in clusters: clustersLengthDistribution[len(cluster)]+=1
-        return np.histogram([cluster.length for cluster in clusters])
-#        return clustersLengthDistribution
+    def iterateByAttribute(clusters, attribute): 
+        for cluster in clusters: yield (cluster, cluster.__dict__[attribute]) 
 
 class VectorPermutation(Permutation):
     '''

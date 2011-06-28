@@ -162,41 +162,43 @@ class ClusterTests(unittest.TestCase):
         Cluster.clusterIdCounter = 0
         self.cluster1 = Cluster(Vector({1:2,2:4}))
         self.cluster2 = Cluster(Vector({2:4}))
+        self.doc1 = Document(1, Vector({3:4}))
+        self.doc2 = Document(2, Vector({2:4}))
     def test_initialization(self):
         self.assertEqual('cluster_0', self.cluster1.clusterId)
         self.assertEqual('cluster_1', self.cluster2.clusterId)
         self.assertEqual(2, Cluster.clusterIdCounter)
     def test_addDocument(self):
-        doc1 = Document(1, Vector({3:4}))
-        doc2 = Document(2, Vector({2:4}))
-        self.cluster1.addDocument(doc1)
+        self.cluster1.addDocument(self.doc1)
         # Test if cluster id is set.
-        self.assertEqual(self.cluster1.clusterId, doc1.clusterId)
+        self.assertEqual(self.cluster1.clusterId, self.doc1.clusterId)
         # Test that cluster mean is updated.
         self.assertEqual({1:2/2.,2:2.,3:2.}, self.cluster1)
         # Test that cluster aggrefate is updated.
         self.assertEqual({1:2,2:4,3:4}, self.cluster1.aggregateVector)
         # Test that document is added to cluster documents.
-        self.assertEqual(doc1, self.cluster1.documentsInCluster[doc1.docId])
-        self.cluster1.addDocument(doc2)
+        self.assertEqual(self.doc1, self.cluster1.documentsInCluster[self.doc1.docId])
+        self.cluster1.addDocument(self.doc2)
         self.assertEqual(3, self.cluster1.vectorWeights)
         self.assertEqual({1:2/3.,2:8/3.,3:4/3.}, self.cluster1)
         self.assertEqual({1:2,2:8,3:4}, self.cluster1.aggregateVector)
     def test_iterateDocumentsInCluster(self):
-        doc1 = Document(1, Vector({3:4}))
-        doc2 = Document(2, Vector({2:4}))
         # Test normal iteration.
-        self.cluster1.addDocument(doc1)
-        self.cluster1.addDocument(doc2)
-        self.assertEqual([doc1, doc2], list(self.cluster1.iterateDocumentsInCluster()))
+        self.cluster1.addDocument(self.doc1)
+        self.cluster1.addDocument(self.doc2)
+        self.assertEqual([self.doc1, self.doc2], list(self.cluster1.iterateDocumentsInCluster()))
         self.assertEqual(2, self.cluster1.length)
         # Test removal of document from cluster, if the document is added to a different cluster.
-        self.cluster2.addDocument(doc2)
-        self.assertEqual([doc1], list(self.cluster1.iterateDocumentsInCluster()))
+        self.cluster2.addDocument(self.doc2)
+        self.assertEqual([self.doc1], list(self.cluster1.iterateDocumentsInCluster()))
         self.assertEqual(1, self.cluster1.length)
         self.assertEqual(1, len(self.cluster1.documentsInCluster))
-        self.assertEqual([doc2], list(self.cluster2.iterateDocumentsInCluster()))
+        self.assertEqual([self.doc2], list(self.cluster2.iterateDocumentsInCluster()))
         self.assertEqual(1, self.cluster2.length)
+    def test_iterateByAttribute(self):
+        self.cluster1.addDocument(self.doc1)
+        self.cluster2.addDocument(self.doc2)
+        self.assertEqual([(self.cluster1, 'cluster_0'), (self.cluster2, 'cluster_1')], list(Cluster.iterateByAttribute([self.cluster1, self.cluster2], 'clusterId')))
         
 if __name__ == '__main__':
     unittest.main()
