@@ -6,11 +6,9 @@ Created on Jun 14, 2011
 import random
 from bitarray import bitarray
 from Bio import trie
-import numpy as np
 from library.vector import VectorGenerator, Vector
 from library.math_modified import isPrime
 from library.classes import TwoWayMap
-from collections import defaultdict
 
 class UtilityMethods:
     @staticmethod
