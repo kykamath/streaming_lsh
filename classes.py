@@ -44,13 +44,15 @@ class Permutation(object):
 class SignaturePermutation(Permutation):
     def __init__(self, signatureLength): 
         super(SignaturePermutation, self).__init__(signatureLength)
-        self.signatureTrie = trie.trie()
+        self.signatureTrie, self.isEmpty = trie.trie(), True
     def addDocument(self, document):
         permutedDocumentSignatureKey = document.signature.permutate(self).to01()
         if self.signatureTrie.has_key(permutedDocumentSignatureKey): self.signatureTrie[permutedDocumentSignatureKey].add(document.docId)
         else: self.signatureTrie[permutedDocumentSignatureKey] = set([document.docId])
+        self.isEmpty=False
     def getNearestDocuments(self, document):
-        if len(self.signatureTrie)==0: return set()
+#        if len(self.signatureTrie)==0: return set()
+        if self.isEmpty: return set()
 #        permutedDocumentSignature = document.signature.permutate(self)
 #        nearestSignatureKey=SignatureTrie.getNearestSignatureKey(self.signatureTrie, permutedDocumentSignature)
 #        return self.signatureTrie[nearestSignatureKey]
