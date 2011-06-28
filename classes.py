@@ -6,6 +6,7 @@ Created on Jun 14, 2011
 import random
 from bitarray import bitarray
 from Bio import trie
+import numpy as np
 from library.vector import VectorGenerator, Vector
 from library.math_modified import isPrime
 from library.classes import TwoWayMap
@@ -117,9 +118,10 @@ class Cluster(Document):
     def length(self): return len(list(self.iterateDocumentsInCluster()))
     @staticmethod
     def getDistribution(clusters):
-        clustersLengthDistribution = defaultdict(int)
-        for cluster in clusters: clustersLengthDistribution[len(cluster)]+=1
-        return clustersLengthDistribution
+#        clustersLengthDistribution = defaultdict(int)
+#        for cluster in clusters: clustersLengthDistribution[len(cluster)]+=1
+        return np.histogram([cluster.length for cluster in clusters])
+#        return clustersLengthDistribution
 
 class VectorPermutation(Permutation):
     '''
