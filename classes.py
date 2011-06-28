@@ -52,8 +52,8 @@ class SignaturePermutation(Permutation):
     def getNearestDocuments(self, document):
         if len(self.signatureTrie)==0: return set()
         permutedDocumentSignature = document.signature.permutate(self)
-        nearestSignatureKey=SignatureTrie.getNearestSignatureKey(self.signatureTrie, permutedDocumentSignature)
-        return self.signatureTrie[nearestSignatureKey]
+#        nearestSignatureKey=SignatureTrie.getNearestSignatureKey(self.signatureTrie, permutedDocumentSignature)
+#        return self.signatureTrie[nearestSignatureKey]
     
 class Document(Vector):
     def __init__(self, docId, vector, clusterId = None):
