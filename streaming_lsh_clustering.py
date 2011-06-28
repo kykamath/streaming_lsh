@@ -21,6 +21,9 @@ class StreamingLSHClustering(object):
         UtilityMethods.updatePhraseTextAndDimensionsMap(document, self.phraseTextAndDimensionMap, **self.clustering_settings)
         document.setSignatureUsingVectorPermutations(self.unitVector, self.vectorPermutations, self.phraseTextAndDimensionMap)
         predictedCluster = None
+        possibleNearestClusters = []
+        for permutation in self.signaturePermutations: possibleNearestClusters+=permutation.getNearestDocuments(document)
+        possibleNearestClusters=set(possibleNearestClusters)
 #        possibleNearestClusters = reduce(lambda x,y:x.union(y), (permutation.getNearestDocuments(document) for permutation in self.signaturePermutations), set())
 #        if possibleNearestClusters: predictedCluster = max(((clusterId, self.clusters[clusterId].cosineSimilarity(document)) for clusterId in possibleNearestClusters), key=itemgetter(1))
 #        if predictedCluster and predictedCluster[1]>=self.thresholdForDocumentToBeInACluster:return predictedCluster[0]
@@ -37,4 +40,11 @@ class StreamingLSHClustering(object):
     
     def regenerateSignatureForClusters(self):
         for cluster in self.clusters.itervalues(): cluster.setSignatureUsingVectorPermutations(self.unitVector, self.vectorPermutations, self.phraseTextAndDimensionMap)
-                
+
+if __name__ == '__main__':
+    s = [1,2,3]
+    s2=[4,5]
+    
+    a=list()
+#    print reduce(lambda x,y: x.union(y), [s,s2], set())
+    print s+s2
