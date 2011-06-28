@@ -118,7 +118,11 @@ class Cluster(Document):
     def length(self): return len(list(self.iterateDocumentsInCluster()))
     @staticmethod
     def iterateByAttribute(clusters, attribute): 
-        for cluster in clusters: yield (cluster, cluster.__dict__[attribute]) 
+        for cluster in clusters: yield (cluster, cluster.__dict__[attribute])
+    @staticmethod
+    def filterClustersByAttribute(clusters, attribute, threshold):
+        for cluster, value in Cluster.iterateByAttribute(clusters, attribute):
+            if value>=threshold: yield cluster
 
 class VectorPermutation(Permutation):
     '''
