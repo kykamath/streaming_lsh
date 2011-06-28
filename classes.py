@@ -8,7 +8,6 @@ from bitarray import bitarray
 from Bio import trie
 from library.vector import VectorGenerator, Vector
 from library.math_modified import isPrime
-from collections import defaultdict
 from library.classes import TwoWayMap
 
 class UtilityMethods:
