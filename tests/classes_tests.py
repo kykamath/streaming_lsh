@@ -140,6 +140,10 @@ class SignaturePermutationTests(unittest.TestCase):
         self.assertEqual(self.pm.signatureTrie[self.doc1.signature.permutate(self.pm).to01()], set([1]))
         self.pm.removeDocument(self.doc1)
         self.assertEqual(None, self.pm.signatureTrie.get(self.doc1.signature.permutate(self.pm).to01()))
+    def test_resetSignatureTrie(self):
+        self.assertTrue(len(self.pm.signatureTrie)>0)
+        self.pm.resetSignatureTrie()
+        self.assertTrue(len(self.pm.signatureTrie)==0)
         
 class RandomGaussianUnitVectorTests(unittest.TestCase):
     def setUp(self): 

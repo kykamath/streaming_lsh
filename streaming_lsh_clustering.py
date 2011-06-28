@@ -37,13 +37,3 @@ class StreamingLSHClustering(object):
     
     def regenerateSignatureForClusters(self):
         for cluster in self.clusters.itervalues(): cluster.setSignatureUsingVectorPermutations(self.unitVector, self.vectorPermutations, self.phraseTextAndDimensionMap)
-
-if __name__ == '__main__':
-    s = set([1,3,3])
-    s2=set([4,5])
-    
-    a=list()
-    a+=s
-    a+=s2
-#    print reduce(lambda x,y: x.union(y), [s,s2], set())
-    print a
