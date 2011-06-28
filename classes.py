@@ -123,7 +123,7 @@ class Cluster(Document):
         else:
             for cluster in clusters: yield (cluster, cluster.length)
     @staticmethod
-    def filterClustersByAttribute(clusters, attribute, threshold):
+    def getClustersAboveThresholdByAttribute(clusters, attribute, threshold):
         for cluster, value in Cluster.iterateByAttribute(clusters, attribute):
             if value>=threshold: yield cluster
 
