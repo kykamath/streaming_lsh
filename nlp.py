@@ -16,7 +16,9 @@ enchantDict = enchant.Dict("en_US")
 def isEnglish(sentance, threshold=0.3):
     data = sentance.split()
     englishWords, totalWords = 0.0, len(data)
+    print 'isEnglish 19'
     try:
+        print 'isEnglish 21', data
         englishWords = sum(1.0 for w in data if enchantDict.check(w))
     except Exception: pass
     if englishWords/totalWords > threshold: return True
