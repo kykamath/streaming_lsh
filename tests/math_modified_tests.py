@@ -6,7 +6,7 @@ Created on Jun 17, 2011
 
 import unittest
 from math_modified import isPrime, ModularArithmetic, exponentialDecay,\
-    DateTimeAirthematic, getLargestPrimeLesserThan
+    DateTimeAirthematic, getLargestPrimeLesserThan, jakkardDistance
 from datetime import datetime, timedelta
 
 class MathModifiedTests(unittest.TestCase):
@@ -26,6 +26,9 @@ class MathModifiedTests(unittest.TestCase):
     def test_getLargestPrimeLesserThan(self):
         self.assertEqual(5, getLargestPrimeLesserThan(6))
         self.assertEqual(13, getLargestPrimeLesserThan(15))
+    def test_jakkard(self):
+        self.assertEqual(0, jakkardDistance(set([1,2]), set([3,4])))
+        self.assertEqual(0.25, jakkardDistance(set([1,2]), set([1,3,4])))
         
 class ModularArithmeticTests(unittest.TestCase):
     def test_gcd(self): 
