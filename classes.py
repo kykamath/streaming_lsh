@@ -34,6 +34,7 @@ class TwoWayMap:
         self.data[mappingDirection][key]=value
         if mappingDirection==TwoWayMap.MAP_FORWARD: self.data[TwoWayMap.MAP_REVERSE][value]=key
         else: self.data[TwoWayMap.MAP_FORWARD][value]=key
+        if len(self.getMap(TwoWayMap.MAP_FORWARD).values())!=len(set(self.getMap(TwoWayMap.MAP_FORWARD).values())): raise Exception()
     def get(self, mappingDirection, key): return self.data[mappingDirection][key]
     def remove(self, mappingDirection, key):
         value = self.data[mappingDirection][key]
