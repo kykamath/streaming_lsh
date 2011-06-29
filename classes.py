@@ -106,10 +106,12 @@ class Cluster(Document):
         super(Cluster, self).__init__(clusterId, vector)
         self.clusterId, self.aggregateVector, self.vectorWeights = clusterId, vector, 1.
         self.documentsInCluster = {}
-    def addDocument(self, document):
+    def addDocument(self, document, shouldUpdateDocumentId=True):
         self.aggregateVector+=document
         self.vectorWeights+=1
         for k in self.aggregateVector: self[k]=self.aggregateVector[k]/self.vectorWeights
+        if shouldUpdateDocumentId: self.updateDocumentId(document)
+    def updateDocumentId(self, document):
         document.clusterId = self.clusterId
         self.documentsInCluster[document.docId] = document
     def iterateDocumentsInCluster(self): 
@@ -134,6 +136,15 @@ class Cluster(Document):
         elif direction==Cluster.BELOW_THRESHOLD:
             for cluster, value in Cluster.iterateByAttribute(clusters, attribute):
                 if value<threshold: yield cluster
+    @staticmethod
+    def mergeClusters(clusters):
+        clusters = list(clusters)
+        mergedCluster = Cluster(clusters[0])
+        [mergedCluster.updateDocumentId(document) for document in clusters[0].iterateDocumentsInCluster()]
+        for cluster in clusters[1:]: 
+            mergedCluster.addDocument(cluster, shouldUpdateDocumentId=False)
+            [mergedCluster.updateDocumentId(document) for document in cluster.iterateDocumentsInCluster()]
+        return mergedCluster
 
 class VectorPermutation(Permutation):
     '''
