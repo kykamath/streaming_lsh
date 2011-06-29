@@ -31,8 +31,6 @@ def getLargestPrimeLesserThan(number):
     '''
     return filter(lambda num: (num % numpy.arange(2,1+int(math.sqrt(num)))).all(), range(2,number+1))[-1]
 
-def jakkardDistance(set1, set2): return float(len(set1.intersection(set2)))/len(set1.union(set2))
-
 class ModularArithmetic:
     @staticmethod
     def gcd(numA, numB):
