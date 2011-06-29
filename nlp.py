@@ -20,8 +20,13 @@ def isEnglish(sentance, threshold=0.3):
     try:
         print 'isEnglish 21', data
         englishWords = sum(1.0 for w in data if enchantDict.check(w))
-    except Exception: pass
-    if englishWords/totalWords > threshold: return True
+        print 'isEnglish 23', englishWords
+    except Exception: 
+        print 'isEnglish 25'
+        pass
+    if englishWords/totalWords > threshold: 
+        print 'isEnglish 28'
+        return True
     return False
 
 def getPhrases(items, minPhraseLength, maxPhraseLength):
