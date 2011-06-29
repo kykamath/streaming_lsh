@@ -22,6 +22,11 @@ class GeneralMethods:
         if currentTime-GeneralMethods.callMethodEveryIntervalVariable>=interval:
             method(**kwargs)
             GeneralMethods.callMethodEveryIntervalVariable=currentTime
+    @staticmethod
+    def reverseDict(map): 
+        dictToReturn = dict([(v,k) for k,v in map.iteritems()])
+        if len(dictToReturn)!=len(map): raise Exception()
+        return dictToReturn
             
 class TwoWayMap:
     '''
@@ -31,16 +36,20 @@ class TwoWayMap:
     MAP_REVERSE = -1
     def __init__(self): self.data = {TwoWayMap.MAP_FORWARD: {}, TwoWayMap.MAP_REVERSE: {}}
     def set(self, mappingDirection, key, value): 
+        if value in self.data[-1*mappingDirection]: 
+            currentKeyForValue = self.data[-1*mappingDirection][value]
+            self.remove(mappingDirection, currentKeyForValue)
         self.data[mappingDirection][key]=value
-        if mappingDirection==TwoWayMap.MAP_FORWARD: self.data[TwoWayMap.MAP_REVERSE][value]=key
-        else: self.data[TwoWayMap.MAP_FORWARD][value]=key
-        if len(self.getMap(TwoWayMap.MAP_FORWARD).values())!=len(set(self.getMap(TwoWayMap.MAP_FORWARD).values())): raise Exception()
+        self.data[-1*mappingDirection][value]=key
+
+#        if len(self.getMap(TwoWayMap.MAP_FORWARD).values())!=len(set(self.getMap(TwoWayMap.MAP_FORWARD).values())): 
+#            print key, value
+#            raise Exception()
+
     def get(self, mappingDirection, key): return self.data[mappingDirection][key]
     def remove(self, mappingDirection, key):
         value = self.data[mappingDirection][key]
-        del self.data[mappingDirection][key]
-        if mappingDirection==TwoWayMap.MAP_FORWARD: del self.data[TwoWayMap.MAP_REVERSE][value]
-        else: del self.data[TwoWayMap.MAP_FORWARD][value]
+        del self.data[mappingDirection][key]; del self.data[-1*mappingDirection][value]
     def getMap(self, mappingDirection): return self.data[mappingDirection]
     def contains(self, mappingDirection, key): return  key in self.data[mappingDirection]
     def __len__(self): return len(self.data[TwoWayMap.MAP_FORWARD])
