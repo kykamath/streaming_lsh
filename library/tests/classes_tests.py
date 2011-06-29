@@ -6,7 +6,7 @@ Created on Jun 23, 2011
 import unittest, sys
 sys.path.append('../')
 from datetime import datetime, timedelta
-from classes import GeneralMethods, TwoWayMap, UNIQUE_LIBRARY_KEY
+from classes import GeneralMethods, TwoWayMap
 
 test_time = datetime.now()
 
