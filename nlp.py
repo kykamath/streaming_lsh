@@ -22,6 +22,8 @@ def isEnglish(sentance, threshold=0.3):
         for w in data:
             print w
             enchantDict.check(w)
+            print 'isEnglish 25'
+        print 'isEnglish 26'
         englishWords = sum(1.0 for w in data if enchantDict.check(w))
         print 'isEnglish 23', englishWords
     except Exception: 
@@ -77,4 +79,5 @@ def getWordsFromRawEnglishMessage(message, check_stop_words=True, extra_terms=['
     return returnWords
 
 if __name__ == '__main__':
-    print getPhrases(getWordsFromRawEnglishMessage('RT @GreySkyThinking: There\'s a fine line between genius and madness. Albert Einstein --------------------------------------------------- ...'), 2,2)
+#    print getPhrases(getWordsFromRawEnglishMessage('RT @GreySkyThinking: There\'s a fine line between genius and madness. Albert Einstein --------------------------------------------------- ...'), 2,2)
+    print enchantDict.check('---------------------------------------------------')
