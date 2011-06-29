@@ -27,7 +27,9 @@ def getPhrases(items, minPhraseLength, maxPhraseLength):
         itemsLen = len(items)
         for i in range(itemsLen): 
             if i+size<itemsLen+1: groups.append(' '.join(items[i:i+size]))
+    print 'comes here'
     groups = [i for i in items if i[0]=='#']
+    print 'groups', groups
     for size in range(minPhraseLength, maxPhraseLength+1): groupPhrases(items, groups, size)
     return groups
 
