@@ -16,22 +16,10 @@ enchantDict = enchant.Dict("en_US")
 def isEnglish(sentance, threshold=0.3):
     data = sentance.split()
     englishWords, totalWords = 0.0, len(data)
-    print 'isEnglish 19'
     try:
-        print 'isEnglish 21', data
-        for w in data:
-            print w
-            if len(w)<15: enchantDict.check(str(w))
-            print 'isEnglish 25'
-        print 'isEnglish 26'
         englishWords = sum(1.0 for w in data if len(w)<15 and enchantDict.check(w))
-        print 'isEnglish 23', englishWords
-    except Exception: 
-        print 'isEnglish 25'
-        pass
-    if englishWords/totalWords > threshold: 
-        print 'isEnglish 28'
-        return True
+    except Exception: pass
+    if englishWords/totalWords > threshold: return True
     return False
 
 def getPhrases(items, minPhraseLength, maxPhraseLength):
@@ -61,23 +49,13 @@ class StopWords:
         
 def getWordsFromRawEnglishMessage(message, check_stop_words=True, extra_terms=['#p2', '#ff', '#fb']):
     returnWords = []
-    print 'getWordsFromRawEnglishMessage 52'
     if isEnglish(message.lower()):
-        print 'getWordsFromRawEnglishMessage 54'
         if StopWords.list==None: StopWords.load(extra_terms)
-#        def matchTag(tag): 
-#                if tag in ['N'] or tag[:2] in ['NN', 'NP', 'NR']: return True
         message = filter(lambda x: not x.startswith('@') and not x.startswith('http:'), message.lower().split())
         for word in message:
             if word[0]=='#': returnWords.append(str('#'+pattern.sub('', word)))
             else: returnWords.append(str(pattern.sub('', word)))
         returnWords = filter(lambda w: len(w)>2, returnWords)
-        print 'getWordsFromRawEnglishMessage 63 return words', returnWords
         if check_stop_words: return filter(lambda w: not StopWords.contains(w) and len(w)>2, returnWords)
         else: return filter(lambda w: len(w)>2, returnWords)
-    print 'getWordsFromRawEnglishMessage 66'
     return returnWords
-
-if __name__ == '__main__':
-#    print getPhrases(getWordsFromRawEnglishMessage('RT @GreySkyThinking: There\'s a fine line between genius and madness. Albert Einstein --------------------------------------------------- ...'), 2,2)
-    print enchantDict.check('---------------------------------------------------')
