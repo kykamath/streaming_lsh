@@ -47,6 +47,7 @@ class TwoWayDictTests(unittest.TestCase):
         self.twoWayMap.remove(TwoWayMap.MAP_FORWARD, 'a')
         self.assertEqual({'b': 'B'}, self.twoWayMap.getMap(self.twoWayMap.MAP_FORWARD))
         self.assertEqual({'B': 'b'}, self.twoWayMap.getMap(self.twoWayMap.MAP_REVERSE))
+        self.twoWayMap.remove(TwoWayMap.MAP_FORWARD, 'a')
         self.assertTrue(self.__isValidObject())
     def test_length(self):
         self.assertEqual(2, len(self.twoWayMap))

@@ -36,20 +36,14 @@ class TwoWayMap:
     MAP_REVERSE = -1
     def __init__(self): self.data = {TwoWayMap.MAP_FORWARD: {}, TwoWayMap.MAP_REVERSE: {}}
     def set(self, mappingDirection, key, value): 
-        if value in self.data[-1*mappingDirection]: 
-            currentKeyForValue = self.data[-1*mappingDirection][value]
-            self.remove(mappingDirection, currentKeyForValue)
+        if value in self.data[-1*mappingDirection]: self.remove(mappingDirection, self.data[-1*mappingDirection][value])
         self.data[mappingDirection][key]=value
         self.data[-1*mappingDirection][value]=key
-
-#        if len(self.getMap(TwoWayMap.MAP_FORWARD).values())!=len(set(self.getMap(TwoWayMap.MAP_FORWARD).values())): 
-#            print key, value
-#            raise Exception()
-
     def get(self, mappingDirection, key): return self.data[mappingDirection][key]
     def remove(self, mappingDirection, key):
-        value = self.data[mappingDirection][key]
-        del self.data[mappingDirection][key]; del self.data[-1*mappingDirection][value]
+        if key in self.data[mappingDirection]:
+            value = self.data[mappingDirection][key]
+            del self.data[mappingDirection][key]; del self.data[-1*mappingDirection][value]
     def getMap(self, mappingDirection): return self.data[mappingDirection]
     def contains(self, mappingDirection, key): return  key in self.data[mappingDirection]
     def __len__(self): return len(self.data[TwoWayMap.MAP_FORWARD])
