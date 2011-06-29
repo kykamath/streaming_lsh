@@ -17,7 +17,7 @@ def isEnglish(sentance, threshold=0.3):
     data = sentance.split()
     englishWords, totalWords = 0.0, len(data)
     try:
-        englishWords = sum(1.0 for w in data if enchantDict.check(w))
+        englishWords = sum(1.0 for w in data if len(w)<15 and enchantDict.check(w))
     except Exception: pass
     if englishWords/totalWords > threshold: return True
     return False
@@ -27,9 +27,7 @@ def getPhrases(items, minPhraseLength, maxPhraseLength):
         itemsLen = len(items)
         for i in range(itemsLen): 
             if i+size<itemsLen+1: groups.append(' '.join(items[i:i+size]))
-    print 'comes here'
     groups = [i for i in items if i[0]=='#']
-    print 'groups', groups
     for size in range(minPhraseLength, maxPhraseLength+1): groupPhrases(items, groups, size)
     return groups
 
@@ -53,8 +51,6 @@ def getWordsFromRawEnglishMessage(message, check_stop_words=True, extra_terms=['
     returnWords = []
     if isEnglish(message.lower()):
         if StopWords.list==None: StopWords.load(extra_terms)
-        def matchTag(tag): 
-                if tag in ['N'] or tag[:2] in ['NN', 'NP', 'NR']: return True
         message = filter(lambda x: not x.startswith('@') and not x.startswith('http:'), message.lower().split())
         for word in message:
             if word[0]=='#': returnWords.append(str('#'+pattern.sub('', word)))
@@ -63,6 +59,3 @@ def getWordsFromRawEnglishMessage(message, check_stop_words=True, extra_terms=['
         if check_stop_words: return filter(lambda w: not StopWords.contains(w) and len(w)>2, returnWords)
         else: return filter(lambda w: len(w)>2, returnWords)
     return returnWords
-
-if __name__ == '__main__':
-    print getPhrases(getWordsFromRawEnglishMessage('RT @GreySkyThinking: There\'s a fine line between genius and madness. Albert Einstein --------------------------------------------------- ...'), 2,2)
