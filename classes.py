@@ -12,7 +12,7 @@ from library.classes import TwoWayMap
 
 class UtilityMethods:
     @staticmethod
-        def updatePhraseTextAndDimensionsMap(phraseVector,  phraseTextAndDimensionMap, **settings):
+    def updatePhraseTextAndDimensionsMap(phraseVector,  phraseTextAndDimensionMap, **settings):
         phraseIterator = phraseVector.iterkeys()
         while len(phraseTextAndDimensionMap)<settings['dimensions']:
             try:
