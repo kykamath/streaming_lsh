@@ -21,7 +21,7 @@ def isEnglish(sentance, threshold=0.3):
         print 'isEnglish 21', data
         for w in data:
             print w
-            enchantDict.check(w)
+            enchantDict.check(str(w))
             print 'isEnglish 25'
         print 'isEnglish 26'
         englishWords = sum(1.0 for w in data if enchantDict.check(w))
