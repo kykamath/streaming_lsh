@@ -63,6 +63,7 @@ def getWordsFromRawEnglishMessage(message, check_stop_words=True, extra_terms=['
         print 'getWordsFromRawEnglishMessage 63 return words', returnWords
         if check_stop_words: return filter(lambda w: not StopWords.contains(w) and len(w)>2, returnWords)
         else: return filter(lambda w: len(w)>2, returnWords)
+    print 'getWordsFromRawEnglishMessage 66'
     return returnWords
 
 if __name__ == '__main__':
