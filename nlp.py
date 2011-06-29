@@ -63,3 +63,6 @@ def getWordsFromRawEnglishMessage(message, check_stop_words=True, extra_terms=['
         if check_stop_words: return filter(lambda w: not StopWords.contains(w) and len(w)>2, returnWords)
         else: return filter(lambda w: len(w)>2, returnWords)
     return returnWords
+
+if __name__ == '__main__':
+    print getPhrases(getWordsFromRawEnglishMessage('RT @GreySkyThinking: There\'s a fine line between genius and madness. Albert Einstein --------------------------------------------------- ...'), 2,2)
