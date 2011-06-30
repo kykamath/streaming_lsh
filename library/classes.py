@@ -3,16 +3,20 @@ Created on Jun 22, 2011
 
 @author: kykamath
 '''
-
-UNIQUE_LIBRARY_KEY = '::ilab::'
-
+from datetime import timedelta
 class Settings(dict):
     '''
-    This class was obtained from Jeff McGee.
+    Part of this class was obtained from Jeff McGee.
     https://github.com/jeffamcgee
     '''
     def __getattr__(self, name): return self[name]
     def __setattr__(self, name, value): self[name] = value
+    def convertToSerializableObject(self):
+        returnData = {}
+        for k, v in self.iteritems():
+            if isinstance(v, timedelta): returnData[k]=v.seconds
+            elif type(v) in [int, float, str, dict, list, tuple]: returnData[k]=v
+        return returnData
         
 class GeneralMethods:
     callMethodEveryIntervalVariable=None

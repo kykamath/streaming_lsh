@@ -7,6 +7,8 @@ Created on Jun 14, 2011
 import cjson, gzip
 from datetime import datetime
 
+twitter_api_time_format = '%a %b %d %H:%M:%S +0000 %Y'
+
 class TweetFiles:
     @staticmethod
     def iterateTweetsFromGzip(file):
@@ -16,4 +18,5 @@ class TweetFiles:
                 if 'text' in data: yield data
             except: pass
         
-def getDateTimeObjectFromTweetTimestamp(timeStamp): return datetime.strptime(timeStamp, '%a %b %d %H:%M:%S +0000 %Y')
+def getDateTimeObjectFromTweetTimestamp(timeStamp): return datetime.strptime(timeStamp, twitter_api_time_format)
+def getStringRepresentationForTweetTimestamp(timeStamp): return datetime.strftime(timeStamp, twitter_api_time_format)
