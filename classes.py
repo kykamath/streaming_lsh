@@ -4,8 +4,6 @@ Created on Jun 22, 2011
 @author: kykamath
 '''
 
-UNIQUE_LIBRARY_KEY = '::ilab::'
-
 class Settings(dict):
     '''
     This class was obtained from Jeff McGee.
@@ -32,7 +30,7 @@ class TwoWayMap:
     '''
     A data strucutre that enables 2 way mapping.
     '''
-    MAP_FORWARD = 1 
+    MAP_FORWARD = 1
     MAP_REVERSE = -1
     def __init__(self): self.data = {TwoWayMap.MAP_FORWARD: {}, TwoWayMap.MAP_REVERSE: {}}
     def set(self, mappingDirection, key, value): 
