@@ -3,14 +3,20 @@ Created on Jun 22, 2011
 
 @author: kykamath
 '''
-
+from datetime import timedelta
 class Settings(dict):
     '''
-    This class was obtained from Jeff McGee.
+    Part of this class was obtained from Jeff McGee.
     https://github.com/jeffamcgee
     '''
     def __getattr__(self, name): return self[name]
     def __setattr__(self, name, value): self[name] = value
+    def convertToSerializableObject(self):
+        returnData = {}
+        for k, v in self.iteritems():
+            if isinstance(v, timedelta): returnData[k]=v.seconds
+            else: returnData[k]=v 
+        return returnData
         
 class GeneralMethods:
     callMethodEveryIntervalVariable=None
