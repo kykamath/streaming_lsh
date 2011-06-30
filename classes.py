@@ -106,6 +106,8 @@ class Cluster(Document):
         super(Cluster, self).__init__(clusterId, vector)
         self.clusterId, self.aggregateVector, self.vectorWeights = clusterId, vector, 1.
         self.documentsInCluster = {}
+    @property
+    def length(self): return len(list(self.iterateDocumentsInCluster()))
     def addDocument(self, document, shouldUpdateDocumentId=True):
         self.aggregateVector+=document
         self.vectorWeights+=1
@@ -120,8 +122,9 @@ class Cluster(Document):
             if self.documentsInCluster[doc].clusterId == self.clusterId: yield self.documentsInCluster[doc]
             else: documentsToDelete.append(doc)
         for doc in documentsToDelete: del self.documentsInCluster[doc]
-    @property
-    def length(self): return len(list(self.iterateDocumentsInCluster()))
+    def mergeCluster(self, otherCluster):
+        self.addDocument(otherCluster, shouldUpdateDocumentId=False)
+        [self.updateDocumentId(document) for document in otherCluster.iterateDocumentsInCluster()]
     @staticmethod
     def iterateByAttribute(clusters, attribute): 
         if attribute!='length':
@@ -137,13 +140,9 @@ class Cluster(Document):
             for cluster, value in Cluster.iterateByAttribute(clusters, attribute):
                 if value<threshold: yield cluster
     @staticmethod
-    def mergeClusters(clusters):
-        clusters = list(clusters)
-        mergedCluster = Cluster(clusters[0])
-        [mergedCluster.updateDocumentId(document) for document in clusters[0].iterateDocumentsInCluster()]
-        for cluster in clusters[1:]: 
-            mergedCluster.addDocument(cluster, shouldUpdateDocumentId=False)
-            [mergedCluster.updateDocumentId(document) for document in cluster.iterateDocumentsInCluster()]
+    def getClusterObjectToMergeFrom(cluster):
+        mergedCluster = Cluster(cluster)
+        [mergedCluster.updateDocumentId(document) for document in cluster.iterateDocumentsInCluster()]
         return mergedCluster
 
 class VectorPermutation(Permutation):
