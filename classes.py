@@ -15,7 +15,7 @@ class Settings(dict):
         returnData = {}
         for k, v in self.iteritems():
             if isinstance(v, timedelta): returnData[k]=v.seconds
-            else: returnData[k]=v 
+            elif type(v) in [int, float, str, dict, list, tuple]: returnData[k]=v
         return returnData
         
 class GeneralMethods:
