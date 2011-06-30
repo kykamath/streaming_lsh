@@ -37,6 +37,7 @@ class TwoWayMap:
     def __init__(self): self.data = {TwoWayMap.MAP_FORWARD: {}, TwoWayMap.MAP_REVERSE: {}}
     def set(self, mappingDirection, key, value): 
         if value in self.data[-1*mappingDirection]: self.remove(mappingDirection, self.data[-1*mappingDirection][value])
+        if key in self.data[mappingDirection]: self.remove(mappingDirection, key)
         self.data[mappingDirection][key]=value
         self.data[-1*mappingDirection][value]=key
     def get(self, mappingDirection, key): return self.data[mappingDirection][key]
