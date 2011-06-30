@@ -47,7 +47,7 @@ class StopWords:
             return StopWords.list[word]
         except KeyError: return False
         
-def getWordsFromRawEnglishMessage(message, check_stop_words=True, extra_terms=['#p2', '#ff', '#fb']):
+def getWordsFromRawEnglishMessage(message, check_stop_words=True, extra_terms=['#p2', '#ff', '#fb', '#followfriday']):
     returnWords = []
     if isEnglish(message.lower()):
         if StopWords.list==None: StopWords.load(extra_terms)
