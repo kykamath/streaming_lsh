@@ -4,6 +4,8 @@ Created on Jun 22, 2011
 @author: kykamath
 '''
 from datetime import timedelta
+import time
+
 class Settings(dict):
     '''
     Part of this class was obtained from Jeff McGee.
@@ -31,6 +33,8 @@ class GeneralMethods:
         dictToReturn = dict([(v,k) for k,v in map.iteritems()])
         if len(dictToReturn)!=len(map): raise Exception()
         return dictToReturn
+    @staticmethod
+    def getEpochFromDateTimeObject(dateTimeObject): return time.mktime(dateTimeObject.timetuple())
             
 class TwoWayMap:
     '''
