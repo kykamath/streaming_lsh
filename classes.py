@@ -35,6 +35,10 @@ class GeneralMethods:
         return dictToReturn
     @staticmethod
     def getEpochFromDateTimeObject(dateTimeObject): return time.mktime(dateTimeObject.timetuple())
+
+class PlottingMethods:
+    @staticmethod
+    def getLatexForString(str): return '$'+str.replace(' ', '\\ ')+'$'
             
 class TwoWayMap:
     '''
