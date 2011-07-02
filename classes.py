@@ -4,7 +4,7 @@ Created on Jun 22, 2011
 @author: kykamath
 '''
 from datetime import timedelta
-import time
+import time, random
 
 class Settings(dict):
     '''
@@ -35,6 +35,8 @@ class GeneralMethods:
         return dictToReturn
     @staticmethod
     def getEpochFromDateTimeObject(dateTimeObject): return time.mktime(dateTimeObject.timetuple())
+    @staticmethod
+    def getRandomColor(): print '#'+''.join(random.choice('0123456789abcdef') for i in range(6))
 
 class PlottingMethods:
     @staticmethod
