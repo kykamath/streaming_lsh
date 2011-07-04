@@ -213,15 +213,6 @@ class ClusterTests(unittest.TestCase):
         self.assertEqual([self.cluster1, self.cluster2], list(Cluster.getClustersByAttributeAndThreshold([self.cluster1, self.cluster2], 'vectorWeights', 1)))
         self.assertEqual([], list(Cluster.getClustersByAttributeAndThreshold([self.cluster1, self.cluster2], 'vectorWeights', 3)))
         self.assertEqual([self.cluster1, self.cluster2], list(Cluster.getClustersByAttributeAndThreshold([self.cluster1, self.cluster2], 'vectorWeights', 3, Cluster.BELOW_THRESHOLD)))
-#    def test_mergeClusters(self):
-#        meanVectorForAllDocuments = Vector.getMeanVector([self.cluster1, self.cluster2, self.docx, self.docy, self.doc1, self.doc2])
-#        self.cluster1.addDocument(self.doc1)
-#        self.cluster2.addDocument(self.doc2)
-#        mergedCluster = Cluster.getClusterObjectToMergeFrom(self.cluster1)
-#        mergedCluster.mergeCluster(self.cluster2)
-#        self.assertEqual([self.docx, self.doc1, self.docy, self.doc2], list(mergedCluster.iterateDocumentsInCluster()))
-#        self.assertEqual(meanVectorForAllDocuments, mergedCluster)
-#        self.assertEqual([mergedCluster.docId, mergedCluster.docId, mergedCluster.docId, mergedCluster.docId], list(doc.clusterId for doc in mergedCluster.iterateDocumentsInCluster()))
 
 if __name__ == '__main__':
     unittest.main()

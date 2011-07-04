@@ -123,9 +123,6 @@ class Cluster(Document):
             if self.documentsInCluster[doc].clusterId == self.clusterId: yield self.documentsInCluster[doc]
             else: documentsToDelete.append(doc)
         for doc in documentsToDelete: del self.documentsInCluster[doc]
-#    def mergeCluster(self, otherCluster):
-#        self.addDocument(otherCluster, shouldUpdateDocumentId=False)
-#        [self.updateDocumentId(document) for document in otherCluster.iterateDocumentsInCluster()]
     @staticmethod
     def iterateByAttribute(clusters, attribute): 
         if attribute!='length':
@@ -140,11 +137,6 @@ class Cluster(Document):
         elif direction==Cluster.BELOW_THRESHOLD:
             for cluster, value in Cluster.iterateByAttribute(clusters, attribute):
                 if value<threshold: yield cluster
-#    @staticmethod
-#    def getClusterObjectToMergeFrom(cluster):
-#        mergedCluster = Cluster(cluster)
-#        [mergedCluster.updateDocumentId(document) for document in cluster.iterateDocumentsInCluster()]
-#        return mergedCluster
 
 class VectorPermutation(Permutation):
     '''
