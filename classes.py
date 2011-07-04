@@ -100,13 +100,13 @@ class Cluster(Document):
     clusterIdCounter = 0
     ABOVE_THRESHOLD = 1
     BELOW_THRESHOLD = -1
-    def __init__(self, document):
+    def __init__(self, document, shouldUpdateDocumentId=True):
         clusterId = 'cluster_%s'%Cluster.clusterIdCounter
         Cluster.clusterIdCounter+=1
         super(Cluster, self).__init__(clusterId, document)
         self.clusterId, self.aggregateVector, self.vectorWeights = clusterId, document, 1.
         self.documentsInCluster = {}
-        self.updateDocumentId(document)
+        if shouldUpdateDocumentId: self.updateDocumentId(document)
     @property
     def length(self): return len(list(self.iterateDocumentsInCluster()))
     def addDocument(self, document, shouldUpdateDocumentId=True):
