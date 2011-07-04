@@ -220,3 +220,4 @@ class ClusterTests(unittest.TestCase):
         self.assertEqual([mergedCluster.docId, mergedCluster.docId], list(doc.clusterId for doc in mergedCluster.iterateDocumentsInCluster()))
 if __name__ == '__main__':
     unittest.main()
+    
