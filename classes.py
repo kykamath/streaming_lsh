@@ -100,12 +100,13 @@ class Cluster(Document):
     clusterIdCounter = 0
     ABOVE_THRESHOLD = 1
     BELOW_THRESHOLD = -1
-    def __init__(self, vector):
+    def __init__(self, document):
         clusterId = 'cluster_%s'%Cluster.clusterIdCounter
         Cluster.clusterIdCounter+=1
-        super(Cluster, self).__init__(clusterId, vector)
-        self.clusterId, self.aggregateVector, self.vectorWeights = clusterId, vector, 1.
+        super(Cluster, self).__init__(clusterId, document)
+        self.clusterId, self.aggregateVector, self.vectorWeights = clusterId, document, 1.
         self.documentsInCluster = {}
+        self.updateDocumentId(document)
     @property
     def length(self): return len(list(self.iterateDocumentsInCluster()))
     def addDocument(self, document, shouldUpdateDocumentId=True):
@@ -122,9 +123,9 @@ class Cluster(Document):
             if self.documentsInCluster[doc].clusterId == self.clusterId: yield self.documentsInCluster[doc]
             else: documentsToDelete.append(doc)
         for doc in documentsToDelete: del self.documentsInCluster[doc]
-    def mergeCluster(self, otherCluster):
-        self.addDocument(otherCluster, shouldUpdateDocumentId=False)
-        [self.updateDocumentId(document) for document in otherCluster.iterateDocumentsInCluster()]
+#    def mergeCluster(self, otherCluster):
+#        self.addDocument(otherCluster, shouldUpdateDocumentId=False)
+#        [self.updateDocumentId(document) for document in otherCluster.iterateDocumentsInCluster()]
     @staticmethod
     def iterateByAttribute(clusters, attribute): 
         if attribute!='length':
@@ -139,11 +140,11 @@ class Cluster(Document):
         elif direction==Cluster.BELOW_THRESHOLD:
             for cluster, value in Cluster.iterateByAttribute(clusters, attribute):
                 if value<threshold: yield cluster
-    @staticmethod
-    def getClusterObjectToMergeFrom(cluster):
-        mergedCluster = Cluster(cluster)
-        [mergedCluster.updateDocumentId(document) for document in cluster.iterateDocumentsInCluster()]
-        return mergedCluster
+#    @staticmethod
+#    def getClusterObjectToMergeFrom(cluster):
+#        mergedCluster = Cluster(cluster)
+#        [mergedCluster.updateDocumentId(document) for document in cluster.iterateDocumentsInCluster()]
+#        return mergedCluster
 
 class VectorPermutation(Permutation):
     '''
