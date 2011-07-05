@@ -13,7 +13,8 @@ class CurveFit():
     '''
     Exponential funcion: a.x^-b
     '''
-    exponentialFunction = lambda p, x: p[0]*pow(x, -1*p[1])
+    @staticmethod
+    def exponentialFunction(p, x): return p[0]*pow(x, -1*p[1])
     
     def __init__(self, functionToFit, initialParameters, dataX, dataY): 
         self.functionToFit, self.initialParameters, self.dataX, self.dataY = functionToFit, initialParameters, dataX, dataY
@@ -36,11 +37,9 @@ class CurveFit():
         cf.estimate()
         return cf.actualParameters
     @staticmethod
-    def iterator(functionToFit, params, x): 
-        for i in x: yield functionToFit(params, i)
+    def getYValuesFor(functionToFit, params, x):  return [functionToFit(params, i) for i in x]
     @staticmethod
     def getParamsForExponentialFitting(x,y): return CurveFit.getParamsAfterFittingData(x, y, CurveFit.exponentialFunction, [1., 1.])
     @staticmethod
-    def exponentialIterator(params,x): CurveFit.iterator(CurveFit.exponentialFunction, params, x)
-        
+    def getYValuesForExponential(params,x): return CurveFit.getYValuesFor(CurveFit.exponentialFunction, params, x)
     
