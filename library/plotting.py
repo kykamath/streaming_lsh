@@ -6,15 +6,25 @@ Created on Jul 5, 2011
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.optimize
+from numpy.ma.core import exp, log
 
 def getLatexForString(str): return '$'+str.replace(' ', '\\ ')+'$'
 
 class CurveFit():
-    '''
-    Exponential funcion: a.x^-b
-    '''
-    exponentialFunction = lambda p, x: p[0]*pow(x, -1*p[1])
-    
+    @staticmethod
+    def exponentialFunction(p, x): 
+        '''
+        Exponential funcion: y = a.x^-b
+        where, a, b = p[0], p[1]
+        '''
+        return p[0]*pow(x, -1*p[1])
+    @staticmethod
+    def inverseExponentialFunction(p, y):
+        '''
+        Inverse exponential funcion: x = e^-(log(y/a)/b)
+        where, a, b = p[0], p[1]
+        '''
+        return exp(-1*log(y/p[0])/p[1])
     def __init__(self, functionToFit, initialParameters, dataX, dataY): 
         self.functionToFit, self.initialParameters, self.dataX, self.dataY = functionToFit, initialParameters, dataX, dataY
         if self.functionToFit != None: self.error = lambda p, x, y: self.functionToFit(p, x) - y
@@ -36,11 +46,9 @@ class CurveFit():
         cf.estimate()
         return cf.actualParameters
     @staticmethod
-    def iterator(functionToFit, params, x): 
-        for i in x: yield functionToFit(params, i)
+    def getYValuesFor(functionToFit, params, x):  return [functionToFit(params, i) for i in x]
     @staticmethod
     def getParamsForExponentialFitting(x,y): return CurveFit.getParamsAfterFittingData(x, y, CurveFit.exponentialFunction, [1., 1.])
     @staticmethod
-    def exponentialIterator(params,x): CurveFit.iterator(CurveFit.exponentialFunction, params, x)
-        
+    def getYValuesForExponential(params,x): return CurveFit.getYValuesFor(CurveFit.exponentialFunction, params, x)
     
