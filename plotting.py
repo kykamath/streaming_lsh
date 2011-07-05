@@ -11,14 +11,20 @@ from numpy.ma.core import exp, log
 def getLatexForString(str): return '$'+str.replace(' ', '\\ ')+'$'
 
 class CurveFit():
-    '''
-    Exponential funcion: a.x^-b
-    '''
     @staticmethod
-    def exponentialFunction(p, x): return p[0]*pow(x, -1*p[1])
+    def exponentialFunction(p, x): 
+        '''
+        Exponential funcion: y = a.x^-b
+        where, a, b = p[0], p[1]
+        '''
+        return p[0]*pow(x, -1*p[1])
     @staticmethod
-    def inverseExponentialFunction(p, y): return exp(-1*log(y/p[0])/p[1])
-    
+    def inverseExponentialFunction(p, y):
+        '''
+        Inverse exponential funcion: x = e^-(log(y/a)/b)
+        where, a, b = p[0], p[1]
+        '''
+        return exp(-1*log(y/p[0])/p[1])
     def __init__(self, functionToFit, initialParameters, dataX, dataY): 
         self.functionToFit, self.initialParameters, self.dataX, self.dataY = functionToFit, initialParameters, dataX, dataY
         if self.functionToFit != None: self.error = lambda p, x, y: self.functionToFit(p, x) - y
