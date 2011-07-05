@@ -6,7 +6,8 @@ Created on Jun 17, 2011
 
 import unittest
 from math_modified import isPrime, ModularArithmetic, exponentialDecay,\
-    DateTimeAirthematic, getLargestPrimeLesserThan
+    DateTimeAirthematic, getLargestPrimeLesserThan,\
+    getSmallestPrimeNumberGreaterThan
 from datetime import datetime
 
 class MathModifiedTests(unittest.TestCase):
@@ -26,6 +27,9 @@ class MathModifiedTests(unittest.TestCase):
     def test_getLargestPrimeLesserThan(self):
         self.assertEqual(5, getLargestPrimeLesserThan(6))
         self.assertEqual(13, getLargestPrimeLesserThan(15))
+    def test_getSmallestPrimeNumberGreaterThan(self):
+        self.assertEqual(7, getSmallestPrimeNumberGreaterThan(7))
+        self.assertEqual(11, getSmallestPrimeNumberGreaterThan(8))
 
 class ModularArithmeticTests(unittest.TestCase):
     def test_gcd(self): 
