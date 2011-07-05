@@ -6,6 +6,7 @@ Created on Jul 5, 2011
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.optimize
+from numpy.ma.core import exp, log
 
 def getLatexForString(str): return '$'+str.replace(' ', '\\ ')+'$'
 
@@ -15,6 +16,8 @@ class CurveFit():
     '''
     @staticmethod
     def exponentialFunction(p, x): return p[0]*pow(x, -1*p[1])
+    @staticmethod
+    def inverseExponentialFunction(p, y): return exp(-1*log(y/p[0])/p[1])
     
     def __init__(self, functionToFit, initialParameters, dataX, dataY): 
         self.functionToFit, self.initialParameters, self.dataX, self.dataY = functionToFit, initialParameters, dataX, dataY
