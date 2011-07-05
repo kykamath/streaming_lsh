@@ -7,9 +7,12 @@ Created on Jun 15, 2011
 import cjson, math
 from numpy import *
 from scipy.stats import mode
+from nltk import cluster
 import random
 from collections import defaultdict
 from operator import itemgetter
+from classes import TwoWayMap
+from vector import VectorGenerator
 
 class EvaluationMetrics:
     '''
@@ -100,5 +103,35 @@ class TrainingAndTestDocuments:
             topic = pickOneByProbability(topics.keys(), [topics[k]['prob'] for k in topics.keys()])
             print ' '.join([topic] + [pickOneByProbability(topics[topic]['tags'].keys(), [topics[topic]['tags'][k] for k in topics[topic]['tags'].keys()]) for i in range(2)] + [random.choice(stopwords) for i in range(5)])
 
+class EMTextClustering:
+    '''
+    Clusters documents given in the form 
+    [(id, text), (id, text), ...., (id, text)]
+    '''
+    PHRASE_TO_DIMENSION = TwoWayMap.MAP_FORWARD
+    DIMENSION_TO_PHRASE = TwoWayMap.MAP_REVERSE
+    def __init__(self, documents, numberOfClusters): self.documents, self.means, self.numberOfClusters, self.vectors = documents, [], numberOfClusters, None
+    
+    def _convertDocumentsToVector(self):
+        self.vectors = []
+        dimensions = TwoWayMap()
+        for docId, document in self.documents:
+            for w in document.split(): 
+                if not dimensions.contains(EMTextClustering.PHRASE_TO_DIMENSION, w): dimensions.set(EMTextClustering.PHRASE_TO_DIMENSION, w, len(dimensions))
+        for docId, document in self.documents:
+            vector = zeros(len(dimensions))
+            for w in document.split(): vector[dimensions.get(EMTextClustering.PHRASE_TO_DIMENSION, w)]+=1 
+            self.vectors.append(vector)
+        
+    def cluster(self):
+        if self.vectors==None: self._convertDocumentsToVector()
+        for i in range(self.numberOfClusters): 
+            self.means.append(VectorGenerator.getRandomGaussianUnitVector(len(self.vectors[0]), 4, 1).values())
+#            self.means.append(ones(len(self.vectors[0])))
+        clusterer = cluster.EMClusterer(self.means, bias=0.1) 
+        return clusterer.cluster(self.vectors, True, trace=True) 
+
 if __name__ == '__main__':
-    TrainingAndTestDocuments.generate()
+#    TrainingAndTestDocuments.generate()
+    import numpy
+    print numpy.zeros(10)

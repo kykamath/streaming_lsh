@@ -38,10 +38,6 @@ class GeneralMethods:
     @staticmethod
     def getRandomColor(): return '#'+''.join(random.choice('0123456789abcdef') for i in range(6))
 
-class PlottingMethods:
-    @staticmethod
-    def getLatexForString(str): return '$'+str.replace(' ', '\\ ')+'$'
-            
 class TwoWayMap:
     '''
     A data strucutre that enables 2 way mapping.
