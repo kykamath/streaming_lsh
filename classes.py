@@ -3,7 +3,7 @@ Created on Jun 22, 2011
 
 @author: kykamath
 '''
-from datetime import timedelta
+from datetime import timedelta, datetime
 import time, random
 
 class Settings(dict):
@@ -37,6 +37,8 @@ class GeneralMethods:
     def getEpochFromDateTimeObject(dateTimeObject): return time.mktime(dateTimeObject.timetuple())
     @staticmethod
     def getRandomColor(): return '#'+''.join(random.choice('0123456789abcdef') for i in range(6))
+    @staticmethod
+    def approximateToNearest5Minutes(dateTimeObject):return datetime(dateTimeObject.year, dateTimeObject.month, dateTimeObject.day, dateTimeObject.hour, 5*(dateTimeObject.minute/5))
 
 class TwoWayMap:
     '''
