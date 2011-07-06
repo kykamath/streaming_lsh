@@ -22,7 +22,12 @@ class GeneralMethodsTests(unittest.TestCase):
     def test_reverseDict(self):
         self.assertEqual({1:'a', 2:'b'}, GeneralMethods.reverseDict({'a':1, 'b':2}))
         self.assertRaises(Exception, GeneralMethods.reverseDict, {'a':1, 'b':1})
-        
+    def test_approximateToNearest5Minutes(self):
+        self.assertEqual(datetime(2011,7,5,15,10), GeneralMethods.approximateToNearest5Minutes(datetime(2011,7,5,15,13,34)))
+        self.assertEqual(datetime(2011,7,5,15,15), GeneralMethods.approximateToNearest5Minutes(datetime(2011,7,5,15,15)))
+        self.assertEqual(datetime(2011,7,5,15,10), GeneralMethods.approximateToNearest5Minutes(datetime(2011,7,5,15,13,11,30)))
+        self.assertEqual(datetime(2011,7,5,15,35), GeneralMethods.approximateToNearest5Minutes(datetime(2011,7,5,15,35,01)))
+    
 class TwoWayDictTests(unittest.TestCase):
     def setUp(self):
         self.twoWayMap = TwoWayMap()
