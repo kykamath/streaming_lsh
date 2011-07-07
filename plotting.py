@@ -66,17 +66,17 @@ class CurveFit():
         cf.estimate()
         return cf.actualParameters
     @staticmethod
-    def getYValuesFor(functionToFit, params, x):  return [functionToFit(params, i) for i in x]
-    @staticmethod
-    def getParamsForDecreasingExponentialFitting(x,y): return CurveFit.getParamsAfterFittingData(x, y, CurveFit.decreasingExponentialFunction, [1., 1.])
-    @staticmethod
-    def getYValuesForDecrasingExponentialFunction(params,x): return CurveFit.getYValuesFor(CurveFit.decreasingExponentialFunction, params, x)
-    @staticmethod
-    def getParamsForIncreasingExponentialFitting(x,y): return CurveFit.getParamsAfterFittingData(x, y, CurveFit.increasingExponentialFunction, [1., 1.])
-    @staticmethod
-    def getYValuesForIncreasingExponentialFunction(params,x): return CurveFit.getYValuesFor(CurveFit.increasingExponentialFunction, params, x)
-    @staticmethod
-    def getParamsForLineFitting(x,y): return CurveFit.getParamsAfterFittingData(x, y, CurveFit.lineFunction, [1., 1.])
+    def getYValues(functionToFit, params, x):  return [functionToFit(params, i) for i in x]
+#    @staticmethod
+#    def getParamsForDecreasingExponentialFitting(x,y): return CurveFit.getParamsAfterFittingData(x, y, CurveFit.decreasingExponentialFunction, [1., 1.])
+#    @staticmethod
+#    def getYValuesForDecrasingExponentialFunction(params,x): return CurveFit.getYValuesFor(CurveFit.decreasingExponentialFunction, params, x)
+#    @staticmethod
+#    def getParamsForIncreasingExponentialFitting(x,y): return CurveFit.getParamsAfterFittingData(x, y, CurveFit.increasingExponentialFunction, [1., 1.])
+#    @staticmethod
+#    def getYValuesForIncreasingExponentialFunction(params,x): return CurveFit.getYValuesFor(CurveFit.increasingExponentialFunction, params, x)
+#    @staticmethod
+#    def getParamsForLineFitting(x,y): return CurveFit.getParamsAfterFittingData(x, y, CurveFit.lineFunction, [1., 1.])
 
 def getCumulativeDistribution(probabilityDistribution):
     cumulativeDistribution, cumulative_value = [], 0
