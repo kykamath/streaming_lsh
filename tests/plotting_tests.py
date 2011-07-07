@@ -5,7 +5,7 @@ Created on Jul 5, 2011
 '''
 import unittest
 import scipy
-from plotting import CurveFit
+from plotting import CurveFit, getCumulativeDistribution
 
 class CurveFitTests(unittest.TestCase):
     def test_curveFitdemo(self):
@@ -21,6 +21,12 @@ class CurveFitTests(unittest.TestCase):
         x, p = 85079, [  1.09194452e+03,   1.03448106e+00]
         self.assertTrue(x==int(CurveFit.inverseOfDecreasingExponentialFunction(p, CurveFit.decreasingExponentialFunction(p, x))))
         self.assertTrue(x==int(CurveFit.inverseOfIncreasingExponentialFunction(p, CurveFit.increasingExponentialFunction(p, x))))
+
+class GlobalMethodTests(unittest.TestCase):
+    def test_getCumulativeDistribution(self):
+        pd = [0.5,0.25, 0.1, 0.1, 0.05]
+        cd = [0.5,0.75,0.85,0.95,1.0]
+        self.assertEqual(cd,getCumulativeDistribution(pd))
 
 if __name__ == '__main__':
     unittest.main()

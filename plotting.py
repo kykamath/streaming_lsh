@@ -69,4 +69,9 @@ class CurveFit():
     def getParamsForIncreasingExponentialFitting(x,y): return CurveFit.getParamsAfterFittingData(x, y, CurveFit.increasingExponentialFunction, [1., 1.])
     @staticmethod
     def getYValuesForIncreasingExponentialFunction(params,x): return CurveFit.getYValuesFor(CurveFit.increasingExponentialFunction, params, x)
+
+def getCumulativeDistribution(probabilityDistribution):
+    cumulativeDistribution, cumulative_value = [], 0
+    for v in probabilityDistribution: cumulativeDistribution.append(cumulative_value+v); cumulative_value+=v
+    return cumulativeDistribution
     
