@@ -13,37 +13,23 @@ def getLatexForString(str): return '$'+str.replace(' ', '\\ ')+'$'
 class CurveFit():
     @staticmethod
     def decreasingExponentialFunction(p, x): 
-        '''
-        Exponential funcion: y = a.x^-b
-        where, a, b = p[0], p[1]
-        '''
+        ''' Exponential funcion: y = p[0].x^-p[1]    '''
         return p[0]*pow(x, -1*p[1])
     @staticmethod
     def increasingExponentialFunction(p, x): 
-        '''
-        Exponential funcion: y = a.x^-b
-        where, a, b = p[0], p[1]
-        '''
+        ''' Exponential funcion: y = p[0].x^-p[1]   '''
         return p[0]*pow(x, p[1])
     @staticmethod
     def inverseOfDecreasingExponentialFunction(p, y):
-        '''
-        Inverse exponential funcion: x = e^-(log(y/a)/b)
-        where, a, b = p[0], p[1]
-        '''
+        ''' Inverse exponential funcion: x = e^-(log(y/p[0])/p[1])    '''
         return exp(-1*log(y/p[0])/p[1])
     @staticmethod
     def inverseOfIncreasingExponentialFunction(p, y):
-        '''
-        Inverse exponential funcion: x = e^(log(y/a)/b)
-        where, a, b = p[0], p[1]
-        '''
+        ''' Inverse exponential funcion: x = e^(log(y/p[0])/p[1])    '''
         return exp(log(y/p[0])/p[1])
     @staticmethod
     def lineFunction(p, x): 
-        '''
-        Line funciton y = p[0]x+p[1]
-        '''
+        '''  Line funciton y = p[0]x+p[1]    '''
         return p[0]*x+p[1]
     def __init__(self, functionToFit, initialParameters, dataX, dataY): 
         self.functionToFit, self.initialParameters, self.dataX, self.dataY = functionToFit, initialParameters, dataX, dataY
@@ -67,16 +53,6 @@ class CurveFit():
         return cf.actualParameters
     @staticmethod
     def getYValues(functionToFit, params, x):  return [functionToFit(params, i) for i in x]
-#    @staticmethod
-#    def getParamsForDecreasingExponentialFitting(x,y): return CurveFit.getParamsAfterFittingData(x, y, CurveFit.decreasingExponentialFunction, [1., 1.])
-#    @staticmethod
-#    def getYValuesForDecrasingExponentialFunction(params,x): return CurveFit.getYValuesFor(CurveFit.decreasingExponentialFunction, params, x)
-#    @staticmethod
-#    def getParamsForIncreasingExponentialFitting(x,y): return CurveFit.getParamsAfterFittingData(x, y, CurveFit.increasingExponentialFunction, [1., 1.])
-#    @staticmethod
-#    def getYValuesForIncreasingExponentialFunction(params,x): return CurveFit.getYValuesFor(CurveFit.increasingExponentialFunction, params, x)
-#    @staticmethod
-#    def getParamsForLineFitting(x,y): return CurveFit.getParamsAfterFittingData(x, y, CurveFit.lineFunction, [1., 1.])
 
 def getCumulativeDistribution(probabilityDistribution):
     cumulativeDistribution, cumulative_value = [], 0
