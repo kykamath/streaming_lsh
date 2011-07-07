@@ -39,6 +39,12 @@ class CurveFit():
         where, a, b = p[0], p[1]
         '''
         return exp(log(y/p[0])/p[1])
+    @staticmethod
+    def lineFunction(p, x): 
+        '''
+        Line funciton y = p[0]x+p[1]
+        '''
+        return p[0]*x+p[1]
     def __init__(self, functionToFit, initialParameters, dataX, dataY): 
         self.functionToFit, self.initialParameters, self.dataX, self.dataY = functionToFit, initialParameters, dataX, dataY
         if self.functionToFit != None: self.error = lambda p, x, y: self.functionToFit(p, x) - y
@@ -69,6 +75,8 @@ class CurveFit():
     def getParamsForIncreasingExponentialFitting(x,y): return CurveFit.getParamsAfterFittingData(x, y, CurveFit.increasingExponentialFunction, [1., 1.])
     @staticmethod
     def getYValuesForIncreasingExponentialFunction(params,x): return CurveFit.getYValuesFor(CurveFit.increasingExponentialFunction, params, x)
+    @staticmethod
+    def getParamsForLineFitting(x,y): return CurveFit.getParamsAfterFittingData(x, y, CurveFit.lineFunction, [1., 1.])
 
 def getCumulativeDistribution(probabilityDistribution):
     cumulativeDistribution, cumulative_value = [], 0
