@@ -32,6 +32,13 @@ class CurveFit():
         where, a, b = p[0], p[1]
         '''
         return exp(-1*log(y/p[0])/p[1])
+    @staticmethod
+    def inverseOfIncreasingExponentialFunction(p, y):
+        '''
+        Inverse exponential funcion: x = e^(log(y/a)/b)
+        where, a, b = p[0], p[1]
+        '''
+        return exp(log(y/p[0])/p[1])
     def __init__(self, functionToFit, initialParameters, dataX, dataY): 
         self.functionToFit, self.initialParameters, self.dataX, self.dataY = functionToFit, initialParameters, dataX, dataY
         if self.functionToFit != None: self.error = lambda p, x, y: self.functionToFit(p, x) - y
