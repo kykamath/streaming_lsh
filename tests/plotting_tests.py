@@ -19,7 +19,7 @@ class CurveFitTests(unittest.TestCase):
         cf.plot()
     def test_exponentialFunctions(self):
         x, p = 85079, [  1.09194452e+03,   1.03448106e+00]
-        self.assertTrue(x==int(CurveFit.inverseExponentialFunction(p, CurveFit.exponentialFunction(p, x))))
+        self.assertTrue(x==int(CurveFit.inverseOfDecreasingExponentialFunction(p, CurveFit.decreasingExponentialFunction(p, x))))
 
 if __name__ == '__main__':
     unittest.main()

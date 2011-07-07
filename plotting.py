@@ -12,19 +12,19 @@ def getLatexForString(str): return '$'+str.replace(' ', '\\ ')+'$'
 
 class CurveFit():
     @staticmethod
-    def exponentialFunction(p, x, increasing=-1): 
+    def decreasingExponentialFunction(p, x): 
         '''
         Exponential funcion: y = a.x^-b
         where, a, b = p[0], p[1]
         '''
-        return p[0]*pow(x, increasing*p[1])
+        return p[0]*pow(x, -1*p[1])
     @staticmethod
-    def inverseExponentialFunction(p, y, increasing=-1):
+    def inverseOfDecreasingExponentialFunction(p, y):
         '''
         Inverse exponential funcion: x = e^-(log(y/a)/b)
         where, a, b = p[0], p[1]
         '''
-        return exp(increasing*log(y/p[0])/p[1])
+        return exp(-1*log(y/p[0])/p[1])
     def __init__(self, functionToFit, initialParameters, dataX, dataY): 
         self.functionToFit, self.initialParameters, self.dataX, self.dataY = functionToFit, initialParameters, dataX, dataY
         if self.functionToFit != None: self.error = lambda p, x, y: self.functionToFit(p, x) - y
@@ -48,7 +48,7 @@ class CurveFit():
     @staticmethod
     def getYValuesFor(functionToFit, params, x):  return [functionToFit(params, i) for i in x]
     @staticmethod
-    def getParamsForExponentialFitting(x,y): return CurveFit.getParamsAfterFittingData(x, y, CurveFit.exponentialFunction, [1., 1.])
+    def getParamsForDecreasingExponentialFitting(x,y): return CurveFit.getParamsAfterFittingData(x, y, CurveFit.decreasingExponentialFunction, [1., 1.])
     @staticmethod
-    def getYValuesForExponential(params,x): return CurveFit.getYValuesFor(CurveFit.exponentialFunction, params, x)
+    def getYValuesForDecrasingExponentialFunction(params,x): return CurveFit.getYValuesFor(CurveFit.decreasingExponentialFunction, params, x)
     
