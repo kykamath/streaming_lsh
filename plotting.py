@@ -19,6 +19,13 @@ class CurveFit():
         '''
         return p[0]*pow(x, -1*p[1])
     @staticmethod
+    def increasingExponentialFunction(p, x): 
+        '''
+        Exponential funcion: y = a.x^-b
+        where, a, b = p[0], p[1]
+        '''
+        return p[0]*pow(x, p[1])
+    @staticmethod
     def inverseOfDecreasingExponentialFunction(p, y):
         '''
         Inverse exponential funcion: x = e^-(log(y/a)/b)
@@ -51,4 +58,8 @@ class CurveFit():
     def getParamsForDecreasingExponentialFitting(x,y): return CurveFit.getParamsAfterFittingData(x, y, CurveFit.decreasingExponentialFunction, [1., 1.])
     @staticmethod
     def getYValuesForDecrasingExponentialFunction(params,x): return CurveFit.getYValuesFor(CurveFit.decreasingExponentialFunction, params, x)
+    @staticmethod
+    def getParamsForIncreasingExponentialFitting(x,y): return CurveFit.getParamsAfterFittingData(x, y, CurveFit.increasingExponentialFunction, [1., 1.])
+    @staticmethod
+    def getYValuesForIncreasingExponentialFunction(params,x): return CurveFit.getYValuesFor(CurveFit.increasingExponentialFunction, params, x)
     
