@@ -26,6 +26,7 @@ class FixedIntervalMethod:
         self.method=method
         self.interval=interval
     def call(self, currentTime, **kwargs):
+        print 'comes here'
         if self.lastCallTime==None: self.lastCallTime=currentTime
         if currentTime-self.lastCallTime>=self.interval:
             self.method(**kwargs)
