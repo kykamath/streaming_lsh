@@ -6,19 +6,27 @@ Created on Jun 23, 2011
 import unittest, sys
 sys.path.append('../')
 from datetime import datetime, timedelta
-from classes import GeneralMethods, TwoWayMap
+from classes import GeneralMethods, TwoWayMap, FixedIntervalMethod
 
 test_time = datetime.now()
 
-class GeneralMethodsTests(unittest.TestCase):
-    def test_callMethodEveryInterval(self):
-        self.numberOfTimesInMethod, currentTime, final_time = 1, test_time, test_time+timedelta(minutes=60)
-        def method(arg1, arg2): 
-            self.numberOfTimesInMethod+=1
-            self.assertEqual(test_time+timedelta(minutes=15*self.numberOfTimesInMethod), arg2+timedelta(minutes=arg1))
+class FixedIntervalMethodTests(unittest.TestCase):
+    def test_basicOperation(self):
+        self.numberOfTimesInMethod1, self.numberOfTimesInMethod2, currentTime, final_time = 1, 0, test_time, test_time+timedelta(minutes=60)
+        def method1(arg1, arg2): 
+            self.numberOfTimesInMethod1+=1
+            self.assertEqual(test_time+timedelta(minutes=15*self.numberOfTimesInMethod1), arg2+timedelta(minutes=arg1))
+        def method2(): self.numberOfTimesInMethod2+=1
+        method1Object = FixedIntervalMethod(method1, timedelta(minutes=15))
+        method2Object = FixedIntervalMethod(method2, timedelta(minutes=5))
         while currentTime<=final_time:
-            GeneralMethods.callMethodEveryInterval(method, timedelta(minutes=15), currentTime, arg1=15, arg2=currentTime)
+            method1Object.call(currentTime, arg1=15, arg2=currentTime)
+            method2Object.call(currentTime)
             currentTime+=timedelta(minutes=1)
+        self.assertEqual(5, self.numberOfTimesInMethod1)
+        self.assertEqual(12, self.numberOfTimesInMethod2)
+
+class GeneralMethodsTests(unittest.TestCase):
     def test_reverseDict(self):
         self.assertEqual({1:'a', 2:'b'}, GeneralMethods.reverseDict({'a':1, 'b':2}))
         self.assertRaises(Exception, GeneralMethods.reverseDict, {'a':1, 'b':1})

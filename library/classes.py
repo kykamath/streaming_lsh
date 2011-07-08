@@ -19,15 +19,19 @@ class Settings(dict):
             if isinstance(v, timedelta): returnData[k]=v.seconds
             elif type(v) in [int, float, str, dict, list, tuple]: returnData[k]=v
         return returnData
+    
+class FixedIntervalMethod:
+    def __init__(self, method, interval):
+        self.lastCallTime=None
+        self.method=method
+        self.interval=interval
+    def call(self, currentTime, **kwargs):
+        if self.lastCallTime==None: self.lastCallTime=currentTime
+        if currentTime-self.lastCallTime>=self.interval:
+            self.method(**kwargs)
+            self.lastCallTime=currentTime
         
 class GeneralMethods:
-    callMethodEveryIntervalVariable=None
-    @staticmethod
-    def callMethodEveryInterval(method, interval, currentTime, **kwargs):
-        if GeneralMethods.callMethodEveryIntervalVariable==None: GeneralMethods.callMethodEveryIntervalVariable=currentTime
-        if currentTime-GeneralMethods.callMethodEveryIntervalVariable>=interval:
-            method(**kwargs)
-            GeneralMethods.callMethodEveryIntervalVariable=currentTime
     @staticmethod
     def reverseDict(map): 
         dictToReturn = dict([(v,k) for k,v in map.iteritems()])
