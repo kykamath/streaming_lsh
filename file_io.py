@@ -10,7 +10,7 @@ class FileIO:
     @staticmethod
     def createDirectoryForFile(path):
         dir = path[:path.rfind('/')]
-        if not os.path.exists(dir): os.umask(0), os.makedirs('%s'%dir, 0770)
+        if not os.path.exists(dir): os.umask(0), os.makedirs('%s'%dir, 0777)
     
     @staticmethod
     def writeToFileAsJson(data, file):
