@@ -13,9 +13,11 @@ class Settings(dict):
     '''
     def __getattr__(self, name): return self[name]
     def __setattr__(self, name, value): self[name] = value
-    def convertToSerializableObject(self):
+    def convertToSerializableObject(self): return Settings.getSerialzedObject(self)
+    @staticmethod
+    def getSerialzedObject(map):
         returnData = {}
-        for k, v in self.iteritems():
+        for k, v in map.iteritems():
             if isinstance(v, timedelta): returnData[k]=v.seconds
             elif type(v) in [int, float, str, dict, list, tuple]: returnData[k]=v
         return returnData
