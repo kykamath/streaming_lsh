@@ -12,6 +12,7 @@ Dependancies
 =============
 * `bitarray <http://pypi.python.org/pypi/bitarray>`_
 * `Biopython <http://biopython.org/>`_
+* `library <https://github.com/kykamath/library>`_
 
 Applications Using Streaming LSH
 ================================
