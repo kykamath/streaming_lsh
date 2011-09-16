@@ -9,6 +9,7 @@ from Bio import trie
 from library.vector import VectorGenerator, Vector
 from library.math_modified import isPrime
 from library.classes import TwoWayMap
+from operator import itemgetter
 
 class UtilityMethods:
     @staticmethod
@@ -33,6 +34,14 @@ class SignatureTrie:
             if not trie.has_prefix(iteratingKey): iteratingKey=iteratingKey[:-1]+digitReplacement[targetKey[i]]
         return iteratingKey
 
+class SignatureList:
+    @staticmethod
+    def hammingDistance(key1, key2): return sum(1 for i,j in zip(key1, key2) if i!=j)
+    @staticmethod
+    def getNearestSignatureKey(list, signature):
+        signature = signature.to01()
+        return min(((key, SignatureList.hammingDistance(key, signature)) for key in list), key=itemgetter(1))[0]
+
 class Signature(bitarray):
     def permutate(self, permutation): return Signature([self[permutation.applyFunction(x)] for x in xrange(len(self))])
 
@@ -44,10 +53,10 @@ class Permutation(object):
     def __eq__(self, other): return self.a==other.a and self.b==other.b and self.p==other.p
     def __str__(self): return 'p: %s, a: %s, b: %s'%(self.p, self.a, self.b)
     
-class SignaturePermutation(Permutation):
+class SignaturePermutationWithTrie(Permutation):
     def __init__(self, signatureLength): 
-        super(SignaturePermutation, self).__init__(signatureLength)
-        self.resetSignatureTrie()
+        super(SignaturePermutationWithTrie, self).__init__(signatureLength)
+        self.resetSignatureDataStructure()
     def addDocument(self, document):
         permutedDocumentSignatureKey = document.signature.permutate(self).to01()
         if self.signatureTrie.has_key(permutedDocumentSignatureKey): self.signatureTrie[permutedDocumentSignatureKey].add(document.docId)
@@ -63,7 +72,28 @@ class SignaturePermutation(Permutation):
         nearestSignatureKey=SignatureTrie.getNearestSignatureKey(self.signatureTrie, permutedDocumentSignature)
         return self.signatureTrie[nearestSignatureKey]
         return set([1])
-    def resetSignatureTrie(self): self.signatureTrie, self.isEmpty = trie.trie(), True
+    def resetSignatureDataStructure(self): self.signatureTrie, self.isEmpty = trie.trie(), True
+    
+class SignaturePermutationWithSortedList(Permutation):
+    def __init__(self, signatureLength): 
+        super(SignaturePermutationWithSortedList, self).__init__(signatureLength)
+        self.resetSignatureDataStructure()
+    def addDocument(self, document):
+        permutedDocumentSignatureKey = document.signature.permutate(self).to01()
+        if permutedDocumentSignatureKey in self.signatureList: self.signatureList[permutedDocumentSignatureKey].add(document.docId)
+        else: self.signatureList[permutedDocumentSignatureKey] = set([document.docId])
+        self.isEmpty=False
+    def removeDocument(self, document):
+        permutedDocumentSignatureKey = document.signature.permutate(self).to01()
+        self.signatureList[permutedDocumentSignatureKey].remove(document.docId)
+        if not self.signatureList[permutedDocumentSignatureKey]: del self.signatureList[permutedDocumentSignatureKey]
+    def getNearestDocuments(self, document):
+        if self.isEmpty: return set()
+        permutedDocumentSignature = document.signature.permutate(self)
+        nearestSignatureKey=SignatureList.getNearestSignatureKey(self.signatureList, permutedDocumentSignature)
+        return self.signatureList[nearestSignatureKey]
+        return set([1])
+    def resetSignatureDataStructure(self): self.signatureList, self.isEmpty = {}, True
     
 class Document(Vector):
     def __init__(self, docId, vector, clusterId = None):

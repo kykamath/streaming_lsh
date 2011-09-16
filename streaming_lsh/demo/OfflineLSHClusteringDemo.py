@@ -18,7 +18,7 @@ Created on Jun 15, 2011
 import sys
 sys.path.append('../')
 import numpy
-from classes import SignaturePermutation, Document, RandomGaussianUnitVector,\
+from classes import SignaturePermutationWithTrie, Document, RandomGaussianUnitVector,\
     VectorPermutation
 from library.vector import Vector
 from library.clustering import EvaluationMetrics
@@ -44,7 +44,7 @@ def offlineLSHClusteringDemo():
     
     unitVector = RandomGaussianUnitVector(dimensions=dimensions, mu=0, sigma=1)
     vectorPermutations = VectorPermutation.getPermutations(signatureLength, dimensions, unitVector)
-    signaturePermutations = [SignaturePermutation(signatureLength) for i in range(numberOfPermutations)]
+    signaturePermutations = [SignaturePermutationWithTrie(signatureLength) for i in range(numberOfPermutations)]
     
     permutatedUnitVectors = [unitVector.getPermutedVector(r) for r in vectorPermutations]
     
