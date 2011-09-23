@@ -49,13 +49,13 @@ class NearestNeighborUsingLSH(object):
         document.setSignatureUsingVectorPermutations(self.unitVector, self.vectorPermutations, self.phraseTextAndDimensionMap)
         predictedNeighbor = None
         possibleNearestNeighbors = reduce(lambda x,y:x.union(y), (permutation.getNearestDocuments(document) for permutation in self.signaturePermutations), set())
-        if possibleNearestNeighbors: predictedNeighbor = max(((docId, document.cosineSimilarity(document)) for docId in possibleNearestNeighbors), key=itemgetter(1))
+        if possibleNearestNeighbors: predictedNeighbor = max(((docId, self.documentIdToDocumentMap[docId].cosineSimilarity(document)) for docId in possibleNearestNeighbors), key=itemgetter(1))
+        print predictedNeighbor
         if predictedNeighbor and predictedNeighbor[1]>=self.nearestNeighborThreshold:return predictedNeighbor[0]
     
     def getNearestDocumentWithReplacement(self, document):
 #        document.setSignatureUsingVectorPermutations(self.unitVector, self.vectorPermutations, self.phraseTextAndDimensionMap)
 #        print document.signature
-        print self.getNearestDocument(document)
         self._removeDocument(document)
         documentToReturn = self.getNearestDocument(document)
         self._addDocument(document)

@@ -14,7 +14,7 @@ nns_settings = {'dimensions': 53,
                 'signature_length': 13,
                 'number_of_permutations': 5,
                 'signature_type': 'signature_type_lists',
-                'nearest_neighbor_threshold': 0.5}
+                'nearest_neighbor_threshold': 0.2}
 
 def createDocumentFromLine(docId, line):
     vector, words = Vector(), line.split()
@@ -31,13 +31,13 @@ for line in FileIO.iterateLinesFromFile('../data/streaming.dat'):
 class NearestNeighborUsingLSHTests(unittest.TestCase):
     def setUp(self):
         self.nnsLSH = NearestNeighborUsingLSH(**nns_settings)
-    def test_nns(self):
-        for d in documents: 
-            self.nnsLSH.update(d)
-            self.assertEqual(d.docId, self.nnsLSH.getNearestDocument(d))
+#    def test_nns(self):
+#        for d in documents: 
+#            self.nnsLSH.update(d)
+#            self.assertEqual(d.docId, self.nnsLSH.getNearestDocument(d))
     def test_getNearestDocumentWithReplacement(self):
         for d in documents: self.nnsLSH.update(d)
-        for d in documents: print d.docId, self.nnsLSH.getNearestDocument(d)
+        for d in documents: print d.docId, self.nnsLSH.getNearestDocumentWithReplacement(d)
         
     
     
